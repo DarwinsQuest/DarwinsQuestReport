@@ -1,0 +1,227 @@
+\documentclass[12pt, a4paper]{report}
+
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[
+    backend=biber,
+    style=alphabetic,
+    sorting=ynt
+]{biblatex}
+\addbibresource{darwinsquest.bib}
+
+\graphicspath{{img/}} % configuring the graphicx package globally
+
+\title{DarwinsQuest}
+\author{
+    Enrico Marchionni\\
+    \texttt{enrico.marchionni@studio.unibo.it}
+    \and
+    Francesco Cipollone\\
+    \texttt{francesco.cipollone@studio.unibo.it}
+    \and
+    Raffaele Marrazzo\\
+    \texttt{raffaele.marrazzo@studio.unibo.it}
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+    \dots
+
+\end{abstract}
+
+\tableofcontents
+
+\chapter{Analysis}
+
+\section{Requirements}
+
+    DarwinsQuest \cite{ontheoriginofspiecies} is a multi-level structured videogame set in a post apocalyptic world,
+    shaken by climate change. The objective is to survive natural selection by completing
+    numerous battles, after choosing your genetically modified fight companions.
+
+\subsubsection{Functional}
+
+\begin{itemize}
+    \item The game will open with a title screen, containing buttons to start/quit the game, and optionally a load button.
+    \item \textit{The player can choose between three game modes: Normal, Hard, and Impossible.}
+    \item At the beginning of the game, the player must be able to select a starter fight companion from a number of multiple choices.
+    \item The game interface will consist of a side-scrolling 2D view, containing the player and enemies. Encountering one enemy will prompt a battle.
+    \item \textit{The game has to manage an economic system that manages win and loss currency transactions.}
+    \item The player's movement will be managed by tiles. Each tile can be a move, battle, or special tile.
+        The movement will be determined by the use of a random value. Said value corresponds to the number of tiles that the player can move.
+    \item The companions are able to evolve based on an evolution tree. Starting from a node, the player can only select one of its children's nodes.
+        Once the player has unlocked one of the leaf nodes, the last tree node, the evolution in the said tree is completed.
+        \textit{Multiple trees can be present at once, meaning that multiple evolution branches could be developed at once.}
+    \item The player has to sequentially complete a series of levels, with increasing difficulty until meeting the final boss.
+        The battles are engaged in 1v1 a turn-based combat fashion, with the ability to switch between companions or perform moves.
+        Later in the game, 2v2 battles can be triggered. After winning a battle the player can choose an upgrade from the evolution tree.
+    \item The player can save their progress during the game. The player can save their progress only in the board.
+        It will not be possible to save during fights.
+\end{itemize}
+
+\subsubsection{Non Functional}
+
+\begin{itemize}
+    \item The battle needs to be challenging for the player and will require a careful strategic plan planning ahead. \label{challengingbattle}
+    \item The game performances must be acceptable.
+    \item The game has to be portable and compatible with Windows, MacOS, and Linux systems.
+\end{itemize}
+
+\section{Domain Model}
+
+    The player can move inside the board map bounds. The map contains the player, the enemies, and special tiles such as the shop, bonus, and penalty tiles.
+    There are some different kind of tiles:
+\begin{itemize}
+    \item \textbf{Move tile}: a generic tile that does not contain any battle or special characteristics;
+    \item \textbf{Battle tile}: landing on this tile will prompt the beginning of a battle (battle tiles cannot be skipped, regardless of the drawn value).
+        Losing said battle will make the player stuck on this tile, preventing them from proceeding further in the game until they beat the opponent;
+    \item \textbf{Special tile}:
+    \begin{itemize}
+        \item \textbf{Bonus tiles}:
+        \begin{itemize}
+            \item Money gain;
+            \item Casual companion stats increase;
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}
+        \item \textbf{Penalty tiles}:
+        \begin{itemize}
+            \item Money loss;
+            \item Casual companion stats decrease;
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+    The player can own one or more fight companions. Each companion has an intrinsic elemental type, such as fire, water, grass, rock, air, electro,
+    and is associated has a set of moves, which are divided into groups based on the companions' elemental type. A certain companion with a certain
+    type only retains moves of its same elemental type plus neutral moves, e.g. A fire companion can only use fire moves and neutral moves,
+    and cannot perform other types' moves.
+
+    Elemental reactions, that are bounded to moves, are defined as follows:
+\begin{center}
+    \begin{tabular}{| c || c | c | c | c | c | c |}
+        \hline
+        Player \textbackslash Enemy & Fire & Water & Grass & Rock & Air & Electro \\ [0.5ex]
+        \hline\hline
+        Fire & * & * & * & * & * & * \\
+        \hline
+        Water & * & * & * & * & * & * \\
+        \hline
+        Grass & * & * & * & * & * & * \\
+        \hline
+        Rock & * & * & * & * & * & * \\
+        \hline
+        Air & * & * & * & * & * & * \\
+        \hline
+        Electro & * & * & * & * & * & * \\
+        \hline
+    \end{tabular}
+\end{center}
+
+    \textit{Each companion in the game will have a personal set of statistics, such as attack (ATK), defense (DEF), health points (HP), and speed (SPD).
+    The values make up the base statistics of a certain companion.}
+
+    In every level, there are two player entities: the player and the opponent (NPC). These entities deploy their companions, which will fight 1v1.
+    A level consists of a selection phase, a battle phase, and leveling phase:
+\begin{itemize}
+    \item \textbf{Selection phase}: before battling the player has to choose the first companion in his battle lineup from his current team;
+    \item \textbf{Battle phase}: during the player's fight turn, it is possible to switch their active companion to a different one (the team must have more than a single companion), 
+        or the player can perform a move. Upon the player's active companion's defeat, they will be forced to switch to another one. 
+        If the player is out of eligible companions the fight is over. In 2v2 battles, the player will deploy two of their companions. 
+        It will be possible to select which of the two enemy companions to attack while respecting each other turns.
+    \item \textbf{Leveling phase}: upon the player's victory, you will be prompted to choose an upgrade from the evolution tree, starting from any of the lastly unlocked nodes.
+\end{itemize}
+
+    The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves management.
+
+    The game currency can be obtained by winning battles and from bonus tiles (see ahead).
+    Losing a battle or landing on a Money loss tile will decrease the player's money amount.
+    Money can be used to purchase items, such as potions to temporarily increase your companion statistics, and companions from the in-game shop.
+
+    Modelling an evolution tree is considered a challenge because it requires designing a complex branching system that accurately reflects the evolution of the companions in the game. 
+    The tree must be visually appealing and easy to navigate, while also ensuring that each node is balanced and offers meaningful choices to the player. 
+    The designer must also consider how to balance the evolution of multiple trees simultaneously and ensure that the player does not become overwhelmed with too many choices. 
+    Additionally, the evolution tree must be designed to fit seamlessly into the game's mechanics and narrative.
+
+    % => mvc.png is a fictional picture inside img folder
+    % \begin{figure}[h]
+    % \centering{}
+    % \includegraphics[width=\textwidth]{mvc} % remember best practice without extension, NO img/mvc, img/mvc.png or mvc.png
+    % \caption{Mvc pattern example.}
+    % \label{img:mvc}
+    % \end{figure}
+
+\chapter{Design}
+
+    \dots
+
+\section{Architecture}
+
+    \dots
+
+\section{Details}
+
+    \dots
+
+\chapter{Deployment}
+
+    \dots
+
+\section{Automatized testing}
+
+    \dots
+
+\section{Work strategy}
+
+    \dots
+
+\section{Development notes}
+
+    \dots
+
+\subsection{Example}
+
+    \dots
+
+\chapter{Final comments}
+
+    \dots
+
+\section{Self-evaluation and future improvements}
+
+    \dots
+
+\section{Difficulties and comments to teachers}
+
+    \dots
+
+\appendix
+
+\chapter{User guide}
+
+    \dots
+
+\chapter{Laboratory}
+
+\section{enrico.marchionni@studio.unibo.it}
+
+\begin{itemize}
+    \item Lab 06: \url{https://github.com/EnryMarch10/lab06.git}
+    \item Lab 07: \url{https://github.com/EnryMarch10/lab07.git}
+    \item Lab 08: \url{https://github.com/EnryMarch10/lab08.git}
+    \item Lab 09: \url{https://github.com/EnryMarch10/lab09.git}
+    \item Lab 10: \url{https://github.com/EnryMarch10/lab10.git}
+    \item Lab 11: \url{https://github.com/EnryMarch10/lab11.git}
+\end{itemize}
+
+\printbibliography
+
+\end{document}
