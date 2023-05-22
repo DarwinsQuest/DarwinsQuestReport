@@ -105,23 +105,68 @@
     type only retains moves of its same elemental type plus neutral moves, e.g. A fire companion can only use fire moves and neutral moves,
     and cannot perform other types' moves.
 
+    Banions in our game are the following:
+\begin{center}
+    \begin{tabular}{| c | c | c | c | c | c | c |}
+        \hline
+        Banion & Element \\ [0.5ex] % Fire & Water & Grass & Rock & Air & Electro
+        \hline\hline
+        fatbird & Air \\
+        \hline
+        bluebird & Air \\
+        \hline
+        bee & Air \\
+        \hline
+        bat & Electro \\
+        \hline
+        bunny & Electro \\
+        \hline
+        chameleon & Electro \\
+        \hline
+        angrypig & Fire \\
+        \hline
+        chicken & Fire \\
+        \hline
+        mushroom & Fire \\
+        \hline
+        trunk & Grass \\
+        \hline
+        radish & Grass \\
+        \hline
+        plant & Grass \\
+        \hline
+        rocks & Rock \\
+        \hline
+        turtle & Rock \\
+        \hline
+        rino & Rock \\
+        \hline
+        slime & Water \\
+        \hline
+        snail & Water \\
+        \hline
+        duck & Water \\
+        \hline
+    \end{tabular}
+\end{center}
+
     Elemental reactions, that are bounded to moves, are defined as follows:
 \begin{center}
     \begin{tabular}{| c || c | c | c | c | c | c |}
         \hline
         Player \textbackslash Enemy & Fire & Water & Grass & Rock & Air & Electro \\ [0.5ex]
         \hline\hline
-        Fire & * & * & * & * & * & * \\
+        Air & * & + & - & + & - & * \\
         \hline
-        Water & * & * & * & * & * & * \\
+        Electro & * & * & - & * & * & + \\
         \hline
-        Grass & * & * & * & * & * & * \\
+        Fire & * & - & + & * & * & * \\
         \hline
-        Rock & * & * & * & * & * & * \\
+        Grass & - & * & * & - & + & + \\
         \hline
-        Air & * & * & * & * & * & * \\
+        Rock & * & * & + & * & - & * \\
         \hline
-        Electro & * & * & * & * & * & * \\
+        Water & + & * & * & * & - & * \\
         \hline
     \end{tabular}
 \end{center}
