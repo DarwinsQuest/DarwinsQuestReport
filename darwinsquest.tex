@@ -14,7 +14,12 @@
 
 \graphicspath{{img/}} % configuring the graphicx package globally
 
-\title{DarwinsQuest}
+\title{
+    \begin{figure}[h]
+    \centering{}
+    \includegraphics[width=\textwidth]{logo} % remember best practice without extension, NO img/logo, img/logo.png or logo.png, but logo is enough
+    \end{figure}
+}
 \author{
     Enrico Marchionni\\
     \texttt{enrico.marchionni@studio.unibo.it}
@@ -33,7 +38,9 @@
 
 \begin{abstract}
 
-    \dots
+    DarwinsQuest \cite{ontheoriginofspiecies} is a multi-level structured videogame set in a post apocalyptic world,
+    shaken by climate change. The objective is to survive natural selection by completing
+    numerous battles, after choosing your genetically modified banions\footnote{Banion = basic companion}.
 
 \end{abstract}
 
@@ -42,10 +49,6 @@
 \chapter{Analysis}
 
 \section{Requirements}
-
-    DarwinsQuest \cite{ontheoriginofspiecies} is a multi-level structured videogame set in a post apocalyptic world,
-    shaken by climate change. The objective is to survive natural selection by completing
-    numerous battles, after choosing your genetically modified fight companions.
 
 \subsubsection{Functional}
 
@@ -171,7 +174,7 @@
     \end{tabular}
 \end{center}
 
-    \textit{Each companion in the game will have a personal set of statistics, such as attack (ATK), defense (DEF), health points (HP), and speed (SPD).
+    \textit{Each companion in the game will have a personal set of statistics, such as attack (ATK), defense (DEF), health points (HP).
     The values make up the base statistics of a certain companion.}
 
     In every level, there are two player entities: the player and the opponent (NPC). These entities deploy their companions, which will fight 1v1.
@@ -206,13 +209,23 @@
 
 \chapter{Design}
 
-    \dots
-
 \section{Architecture}
 
-    \dots
+    This projects is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
 
 \section{Details}
+
+    \dots
+
+    \subsubsection{Enrico Marchionni}
+
+    \dots
+
+    \subsubsection{Francesco Cipollone}
+
+    \dots
+
+    \subsubsection{Raffaele Marrazzo}
 
     \dots
 
@@ -224,11 +237,35 @@
 
     \dots
 
+    \subsubsection{Enrico Marchionni}
+
+    \dots
+
+    \subsubsection{Francesco Cipollone}
+
+    \dots
+
+    \subsubsection{Raffaele Marrazzo}
+
+    \dots
+
 \section{Work strategy}
 
     \dots
 
 \section{Development notes}
+
+    \dots
+
+    \subsubsection{Enrico Marchionni}
+
+    \dots
+
+    \subsubsection{Francesco Cipollone}
+
+    \dots
+
+    \subsubsection{Raffaele Marrazzo}
 
     \dots
 
@@ -244,7 +281,31 @@
 
     \dots
 
+    \subsubsection{Enrico Marchionni}
+
+    \dots
+
+    \subsubsection{Francesco Cipollone}
+
+    \dots
+
+    \subsubsection{Raffaele Marrazzo}
+
+    \dots
+
 \section{Difficulties and comments to teachers}
+
+    \dots
+
+    \subsubsection{Enrico Marchionni}
+
+    \dots
+
+    \subsubsection{Francesco Cipollone}
+
+    \dots
+
+    \subsubsection{Raffaele Marrazzo}
 
     \dots
 
@@ -259,12 +320,15 @@
 \section{enrico.marchionni@studio.unibo.it}
 
 \begin{itemize}
-    \item Lab 06: \url{https://github.com/EnryMarch10/lab06.git}
-    \item Lab 07: \url{https://github.com/EnryMarch10/lab07.git}
-    \item Lab 08: \url{https://github.com/EnryMarch10/lab08.git}
-    \item Lab 09: \url{https://github.com/EnryMarch10/lab09.git}
-    \item Lab 10: \url{https://github.com/EnryMarch10/lab10.git}
-    \item Lab 11: \url{https://github.com/EnryMarch10/lab11.git}
+    \item Lab 04: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=113869#p169173}
+    \item Lab 05: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=114647#p169723}
+    \item Lab 06: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=115548#p171159}
+    \item Lab 07: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=117044#p173058}
+    \item Lab 08: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=117852#p174127}
+    \item Lab 09: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=118995#p175326}
+    \item Lab 10: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=119938#p176522}
+    \item Lab 11: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=121130#p177368}
+    \item Lab 12: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=121885#p178425}
 \end{itemize}
 
 \printbibliography
