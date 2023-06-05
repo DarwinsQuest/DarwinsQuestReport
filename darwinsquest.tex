@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{textcomp}
 
 \usepackage[
     backend=biber,
@@ -15,7 +16,7 @@
 \graphicspath{{img/}} % configuring the graphicx package globally
 
 \title{
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering{}
     \includegraphics[width=\textwidth]{logo} % remember best practice without extension, NO img/logo, img/logo.png or logo.png, but logo is enough
     \end{figure}
@@ -39,8 +40,8 @@
 \begin{abstract}
 
     DarwinsQuest \cite{ontheoriginofspiecies} is a multi-level structured videogame set in a post apocalyptic world,
-    shaken by climate change. The objective is to survive natural selection by completing
-    numerous battles, after choosing your genetically modified banions\footnote{Banion = basic companion}.
+    shaken by climate change. The goal is to survive natural selection by completing numerous battles,
+    after choosing your genetically modified banions\footnote{\emph{Banion} is the name we chose as game entities} (basic companions).
 
 \end{abstract}
 
@@ -53,7 +54,7 @@
 \subsubsection{Functional}
 
 \begin{itemize}
-    \item The game will open with a title screen, containing buttons to start/quit the game, and optionally a load button.
+    \item The game will open with a title screen, containing buttons to start/quit the game, \textit{and optionally a load button}.
     \item \textit{The player can choose between three game modes: Normal, Hard, and Impossible.}
     \item At the beginning of the game, the player must be able to select a starter fight companion from a number of multiple choices.
     \item The game interface will consist of a side-scrolling 2D view, containing the player and enemies. Encountering one enemy will prompt a battle.
@@ -109,7 +110,9 @@
     and cannot perform other types' moves.
 
     Banions in our game are the following:
-\begin{center}
+
+\begin{table}[ht]
+    \begin{center}
     \begin{tabular}{| c | c | c | c | c | c | c |}
         \hline
         Banion & Element \\ [0.5ex] % Fire & Water & Grass & Rock & Air & Electro
@@ -151,28 +154,34 @@
         duck & Water \\
         \hline
     \end{tabular}
-\end{center}
+    \caption{\label{table:banions} Banions}
+    \end{center}
+\end{table}
 
     Elemental reactions, that are bounded to moves, are defined as follows:
-\begin{center}
+
+\begin{table}[ht]
+    \begin{center}
     \begin{tabular}{| c || c | c | c | c | c | c |}
         \hline
-        Player \textbackslash Enemy & Fire & Water & Grass & Rock & Air & Electro \\ [0.5ex]
+        Player \textbackslash Enemy & Air & Electro & Fire & Grass & Rock & Water \\ [0.5ex]
         \hline\hline
-        Air & * & + & - & + & - & * \\
+        Air         & - & * & * & - & + & + \\
         \hline
-        Electro & * & * & - & * & * & + \\
+        Electro     & * & + & * & - & * & * \\
         \hline
-        Fire & * & - & + & * & * & * \\
+        Fire        & * & * & * & + & * & - \\
         \hline
-        Grass & - & * & * & - & + & + \\
+        Grass       & + & + & - & * & - & * \\
         \hline
-        Rock & * & * & + & * & - & * \\
+        Rock        & - & * & * & + & * & * \\
         \hline
-        Water & + & * & * & * & - & * \\
+        Water       & - & * & + & * & * & * \\
         \hline
     \end{tabular}
-\end{center}
+    \caption{\label{table:elements} Elements}
+    \end{center}
+\end{table}
 
     \textit{Each companion in the game will have a personal set of statistics, such as attack (ATK), defense (DEF), health points (HP).
     The values make up the base statistics of a certain companion.}
@@ -199,33 +208,119 @@
     The designer must also consider how to balance the evolution of multiple trees simultaneously and ensure that the player does not become overwhelmed with too many choices. 
     Additionally, the evolution tree must be designed to fit seamlessly into the game's mechanics and narrative.
 
-    % => mvc.png is a fictional picture inside img folder
-    % \begin{figure}[h]
-    % \centering{}
-    % \includegraphics[width=\textwidth]{mvc} % remember best practice without extension, NO img/mvc, img/mvc.png or mvc.png
-    % \caption{Mvc pattern example.}
-    % \label{img:mvc}
-    % \end{figure}
-
 \chapter{Design}
 
 \section{Architecture}
 
     This projects is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
+    In out architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiate, in turn, the
+    \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
+    at the right moment, following MVC pattern.
+
+    In our architecture the main classes are \textbf{JavaFXApplication} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
+    first one is responsible for the collection of input and shows the output, the third one is the logic of the game and the second one is the link between them.
+
+    % \begin{figure}[h]
+    % \centering{}
+    % \includegraphics[width=\textwidth]{mvc}
+    % \end{figure}
 
 \section{Details}
 
     \dots
 
-    \subsubsection{Enrico Marchionni}
+    \subsection*{Enrico Marchionni}
+
+        \subsubsection{Game Difficulty}
+
+            \paragraph{Problem}
+            
+            Giving the possibility to choose between different thought games.
+            Each difficulty should determine for example the number of tiles for the \emph{Board}, the moving \emph{Strategy} in it,
+            the number and \emph{Element} of the \emph{Opponent}'s \emph{Banion}s, the \emph{AI} for each \emph{Opponent}...
+            A requirement is that this problem has to be resolved in an extendible way. So once
+            the system is built, adding a difficulty must be easy and fast.
+
+            \paragraph{Solution}
+
+            The element \emph{Board} is the main entity of this game because it determines how much
+            levels have to be completed to win the game. So the main \emph{Model} class that is responsible for
+            the difficulties is the \emph{Engine} class. It retrieves the \emph{Board} and everything else go by itself
+            only by selecting the \emph{Difficulty}. The difficulty has the goal to decide the \emph{Board} \emph{Strategy} of
+            movement, the number of levels and the \emph{AI} associated with the \emph{Opponent}. Each \emph{Opponent} will
+            be created by the \emph{Board} at the right moment through an \emph{OpponentFactory} that was created by the \emph{Difficulty}
+            itself.
+
+            \begin{figure}[ht]
+            \centering{}
+            \caption{UML difficulty}
+            \includegraphics[width=\textwidth]{difficulty}
+            % \label{img:difficulty}
+            % \ref{img:difficulty}
+            \end{figure}
+
+            \paragraph{Pattern}
+
+            The \emph{Difficulty} decides the \emph{Board} step of movement by passing a \emph{PositiveIntSupplier} to \emph{Board} constructor via \emph{Strategy}.
+            Furthermore the \emph{Difficulty} decides also the \emph{OpponentFactory} implementation to pass to the \emph{Board} via \emph{Strategy}.
+            The \emph{OpponentFactory} can be considered ad Abstract Factory because every single implementation of \emph{Difficulty} could pass
+            a different implementation of \emph{OpponentFactory} to the relative \emph{BattleBoard}.
+            
+        \pagebreak
+
+        \subsubsection{\emph{Element}s, \emph{Move}s and \emph{Banion}s Generation}
+
+            \paragraph{Problem}
+            
+            Generating game entities: \emph{Element}, \emph{Move} and \emph{Banion}. Our game needs a consistent number of \emph{Banion} to be playable \ref{table:banions}.
+            It would better if they could be the same every time the application starts: same names, same sprites, same moves...
+            Independently from the saving of the user progresses it would be nice for a user to choose between the same set of Banions at the beginning of every new the game.
+
+            \paragraph{Solution}
+
+            The problem is that somehow these entities has to be created, so how I decided to do that is the solution.
+            At the beginning I started from the generation of \emph{Element}s \ref{table:elements} by coding each one in Java.
+            The two main problems I observed were the expansion of classes and the inability to easily and quickly add new ones.
+            After that I took time to think at a more extendible and cleaner solution, so I went for the deserialization.
+            I decided to create in the MVC \emph{Controller}, a system to deserialize entities from file, in specific \textit{.json}, using \href{https://github.com/google/gson}{Gson}.
+            I also wanted to make sure to avoid duplication of information.
+            We decided that every single entity must be identifiable by name.
+            So I created three files, one for each entity to generate, following this structure:
+            \begin{itemize}
+                \item \emph{Element} \textrightarrow independent from the other entities;
+                \item \emph{Move} \textrightarrow dependent from \emph{Element} entities (each \emph{Move} is associated with one \emph{Element});
+                \item \emph{Banion} \textrightarrow dependent from \emph{Element} and \emph{Move} entities (each \emph{Banion} is associated with one \emph{Element} and 4 \emph{Move}s);
+            \end{itemize}
+
+            \paragraph{Pattern}
+
+            The entities are created by using \emph{Factory} pattern.
+            \emph{ElementFactory}, \emph{MoveFactory} and \emph{BanionFactory} retrieves the deserialized data with the shape of a set.
+
+            \paragraph{Comments}
+
+            Following this scheme in future it could be easily add the functionality of writing a system to save user progress.
+            This would consist essentially on storing user \emph{Banion}s data in a folder (ex. \emph{.darwinsquest} in the user folder) and reload them after the login operation.
+            For what concerns \emph{User} and \emph{Board} progresses serialization it should be thought in organization, and it would be integrated with the serialization/deserialization of entities.
+
+        \pagebreak
+
+        \subsubsection{View}
+
+            \paragraph{Problem}
+
+            \paragraph{Solution}
+
+            \paragraph{Pattern}
+
+            
+        \pagebreak
+
+    \subsection*{Francesco Cipollone}
 
     \dots
 
-    \subsubsection{Francesco Cipollone}
-
-    \dots
-
-    \subsubsection{Raffaele Marrazzo}
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
@@ -237,15 +332,15 @@
 
     \dots
 
-    \subsubsection{Enrico Marchionni}
+    \subsection*{Enrico Marchionni}
 
     \dots
 
-    \subsubsection{Francesco Cipollone}
+    \subsection*{Francesco Cipollone}
 
     \dots
 
-    \subsubsection{Raffaele Marrazzo}
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
@@ -257,15 +352,15 @@
 
     \dots
 
-    \subsubsection{Enrico Marchionni}
+    \subsection*{Enrico Marchionni}
 
     \dots
 
-    \subsubsection{Francesco Cipollone}
+    \subsection*{Francesco Cipollone}
 
     \dots
 
-    \subsubsection{Raffaele Marrazzo}
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
@@ -281,15 +376,15 @@
 
     \dots
 
-    \subsubsection{Enrico Marchionni}
+    \subsection*{Enrico Marchionni}
 
     \dots
 
-    \subsubsection{Francesco Cipollone}
+    \subsection*{Francesco Cipollone}
 
     \dots
 
-    \subsubsection{Raffaele Marrazzo}
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
@@ -297,15 +392,15 @@
 
     \dots
 
-    \subsubsection{Enrico Marchionni}
+    \subsection*{Enrico Marchionni}
 
     \dots
 
-    \subsubsection{Francesco Cipollone}
+    \subsection*{Francesco Cipollone}
 
     \dots
 
-    \subsubsection{Raffaele Marrazzo}
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
