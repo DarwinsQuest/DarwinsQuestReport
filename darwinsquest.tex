@@ -117,9 +117,9 @@
         \hline
         Banion & Element \\ [0.5ex] % Fire & Water & Grass & Rock & Air & Electro
         \hline\hline
-        fatbird & Air \\
+        fat bird & Air \\
         \hline
-        bluebird & Air \\
+        blue bird & Air \\
         \hline
         bee & Air \\
         \hline
@@ -129,7 +129,7 @@
         \hline
         chameleon & Electro \\
         \hline
-        angrypig & Fire \\
+        angry pig & Fire \\
         \hline
         chicken & Fire \\
         \hline
@@ -238,8 +238,8 @@
             Giving the possibility to choose between different thought games.
             Each difficulty should determine for example the number of tiles for the \emph{Board}, the moving \emph{Strategy} in it,
             the number and \emph{Element} of the \emph{Opponent}'s \emph{Banion}s, the \emph{AI} for each \emph{Opponent}...
-            A requirement is that this problem has to be resolved in an extendible way. So once
-            the system is built, adding a difficulty must be easy and fast.
+            A requirement is that this problem has to be resolved in an extendible way.
+            So once the system is built, adding a difficulty must be easy and fast according to \emph{OCP} (open closed principle).
 
             \paragraph{Solution}
 
@@ -272,17 +272,19 @@
 
             \paragraph{Problem}
             
-            Generating game entities: \emph{Element}, \emph{Move} and \emph{Banion}. Our game needs a consistent number of \emph{Banion} to be playable \ref{table:banions}.
+            Generating game entities: \emph{Element}, \emph{Move} and \emph{Banion}. Our game needs a consistent number of \emph{Banion}s \ref{table:banions} to be playable.
             It would better if they could be the same every time the application starts: same names, same sprites, same moves...
-            Independently from the saving of the user progresses it would be nice for a user to choose between the same set of Banions at the beginning of every new the game.
+            Independently from the user progresses it would be nice for a user to choose between the same set of Banions at the beginning of every new the game.
 
             \paragraph{Solution}
 
             The problem is that somehow these entities has to be created, so how I decided to do that is the solution.
-            At the beginning I started from the generation of \emph{Element}s \ref{table:elements} by coding each one in Java.
+            At the beginning I started from the generation of \emph{Element}s \ref{table:elements} by coding each one in Java classes.
             The two main problems I observed were the expansion of classes and the inability to easily and quickly add new ones.
-            After that I took time to think at a more extendible and cleaner solution, so I went for the deserialization.
-            I decided to create in the MVC \emph{Controller}, a system to deserialize entities from file, in specific \textit{.json}, using \href{https://github.com/google/gson}{Gson}.
+            After that I took time to think at a more extendible and cleaner solution, at the end I decided to go for the deserialization.
+            I decided to create in the MVC \emph{Controller} a system to deserialize entities from file.
+            In specific I chose \textit{.json}, using \href{https://github.com/google/gson}{Gson} library.
+            
             I also wanted to make sure to avoid duplication of information.
             We decided that every single entity must be identifiable by name.
             So I created three files, one for each entity to generate, following this structure:
@@ -291,6 +293,9 @@
                 \item \emph{Move} \textrightarrow dependent from \emph{Element} entities (each \emph{Move} is associated with one \emph{Element});
                 \item \emph{Banion} \textrightarrow dependent from \emph{Element} and \emph{Move} entities (each \emph{Banion} is associated with one \emph{Element} and 4 \emph{Move}s);
             \end{itemize}
+
+            I also decoupled file reading from entities generation.
+            I put in the \textit{darwinsquest.config} package classes to read from file while in \textit{darwinsquest.config} I put the Factories according to \emph{SRP} (single responsibility principle).
 
             \paragraph{Pattern}
 
@@ -305,11 +310,36 @@
 
         \pagebreak
 
+        \subsubsection{\emph{Sprite}s}
+
+            \paragraph{Problem}
+
+            Each \emph{Banion} should be represented by a \emph{Sprite} in the \emph{View}.
+
+            \paragraph{Solution}
+
+            I considered that each \emph{Banion} is uniquely identified by its name.
+            So I decided to put the necessary data in the same \textit{.json} file that contained also the \emph{Banion}s information.
+            By doing that I created a \emph{BanionsSpriteFactory} class in the \emph{View} that has to read \emph{Sprite} record (it contains \emph{Banion} .png information).
+            Each banion will be associated in the \emph{View} to its \emph{Sprite} by its name (this can be seen in \emph{ChooseBanionMenuView} constructor).
+
+            \paragraph{Pattern}
+
+            \emph{BanionsSpriteFactory} is a \emph{Factory} of \emph{Banion}'s \emph{Sprite}s.
+            
+        \pagebreak
+
         \subsubsection{View}
 
             \paragraph{Problem}
 
+            How to separate concerns in the chosen \emph{JavaFX} library.
+            How to decouple style from showing controls, for example how to specify each \emph{Scene} font in a \emph{DRY} (don't repeat yourself) way.
+
             \paragraph{Solution}
+
+            I started by using \textit{.css} files to specify style and \textit{.fxml} to specify layouts for each Container.
+            I created a Controller for each Container.
 
             \paragraph{Pattern}
 
