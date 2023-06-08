@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{xurl}
 \usepackage{textcomp}
 
 \usepackage[
@@ -217,7 +218,7 @@
     \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
     at the right moment, following MVC pattern.
 
-    In our architecture the main classes are \textbf{JavaFXApplication} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
+    In our architecture the main classes are \textbf{JavaFXVIew} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
     first one is responsible for the collection of input and shows the output, the third one is the logic of the game and the second one is the link between them.
 
     % \begin{figure}[h]
@@ -226,8 +227,6 @@
     % \end{figure}
 
 \section{Details}
-
-    \dots
 
     \subsection*{Enrico Marchionni}
 
@@ -263,9 +262,23 @@
 
             The \emph{Difficulty} decides the \emph{Board} step of movement by passing a \emph{PositiveIntSupplier} to \emph{Board} constructor via \emph{Strategy}.
             Furthermore the \emph{Difficulty} decides also the \emph{OpponentFactory} implementation to pass to the \emph{Board} via \emph{Strategy}.
-            The \emph{OpponentFactory} can be considered ad Abstract Factory because every single implementation of \emph{Difficulty} could pass
+            The \emph{OpponentFactory} can be considered as \emph{Abstract Factory} because every single implementation of \emph{Difficulty} could pass
             a different implementation of \emph{OpponentFactory} to the relative \emph{BattleBoard}.
             
+        \pagebreak
+
+        \subsubsection{\emph{Banion}}
+
+            \paragraph{Problem}
+
+            We wanted to make two \emph{Banion}s with same name and statistics be considered different at \emph{Domain Model} level.
+
+            \paragraph{Solution}
+
+            After evaluating different options such as not overriding \emph{Banion}'s equals, we decided to use
+            \href{https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html}{\textit{java.util.UUID}} class to identify every single \emph{Banion} instance.
+            In this way it is possible for a player for example to have in the inventory two \emph{Banion}s with the same name twice, because they are different.
+
         \pagebreak
 
         \subsubsection{\emph{Element}s, \emph{Move}s and \emph{Banion}s Generation}
@@ -299,7 +312,7 @@
 
             \paragraph{Pattern}
 
-            The entities are created by using \emph{Factory} pattern.
+            The entities are created by using \emph{Abstract Factory} pattern.
             \emph{ElementFactory}, \emph{MoveFactory} and \emph{BanionFactory} retrieves the deserialized data with the shape of a set.
 
             \paragraph{Comments}
@@ -322,10 +335,6 @@
             So I decided to put the necessary data in the same \textit{.json} file that contained also the \emph{Banion}s information.
             By doing that I created a \emph{BanionsSpriteFactory} class in the \emph{View} that has to read \emph{Sprite} record (it contains \emph{Banion} .png information).
             Each banion will be associated in the \emph{View} to its \emph{Sprite} by its name (this can be seen in \emph{ChooseBanionMenuView} constructor).
-
-            \paragraph{Pattern}
-
-            \emph{BanionsSpriteFactory} is a \emph{Factory} of \emph{Banion}'s \emph{Sprite}s.
             
         \pagebreak
 
@@ -340,10 +349,9 @@
 
             I started by using \textit{.css} files to specify style and \textit{.fxml} to specify layouts for each Container.
             I created a Controller for each Container.
+            I created a \textit{View} interface that is a generic interface with the aim to create and show different views.
+            In this way the \textit{View} interface remains generic and could potentially change without modifying its interfaces.
 
-            \paragraph{Pattern}
-
-            
         \pagebreak
 
     \subsection*{Francesco Cipollone}
@@ -356,15 +364,40 @@
 
 \chapter{Deployment}
 
-    \dots
-
 \section{Automatized testing}
 
-    \dots
+    We used \emph{JUnit} to test our \emph{Model} classes.
 
     \subsection*{Enrico Marchionni}
 
-    \dots
+    \subsubsection{TestNormalDifficulty}
+    
+    Tests difficulty and opponents factory behavior;
+
+    \subsubsection{TestBanion}
+    
+    Tests if \emph{Banion} behaves correctly, and if \emph{Element}s are correctly related to \emph{Banion}s;
+
+    \subsubsection{TestEngine}
+    
+    Tests \emph{Engine} behavior as difficulty provider.
+
+    \subsubsection{TestAssert}
+    
+    Despite using additional libraries such as \href{https://commons.apache.org/proper/commons-lang/}{apache commons-lang3}
+    I implemented the utility \emph{darwinsquest.util.Asserts} class to accelerate arguments checks in a fluently way.
+
+    \subsubsection{TestCollectors}
+    
+    Tests the \emph{darwinsquest.util.Collectors} utility class necessary to collect data to an immutable view of \emph{java.util.LinkedHashSet} for example.
+
+    \subsubsection{TestGeneration}
+    
+    Tests the correct generation of entities, how described in my \emph{Details} section.
+
+    \subsubsection{View}
+
+    For questions of time and lack of knowledge I wasn't able to test the \emph{View}.
 
     \subsection*{Francesco Cipollone}
 
@@ -376,15 +409,22 @@
 
 \section{Work strategy}
 
-    \dots
+    We followed our \emph{Analysis} idea by developing the \emph{Model} main interfaces and classes.
+    During development we tried to adopt git-flow by creating a \emph{develop} branch and a new branch for each new \emph{feature}.
 
-\section{Development notes}
+    ... problems with battle controller ...
 
-    \dots
+    We proceeded as follows:
 
     \subsection*{Enrico Marchionni}
 
-    \dots
+    \begin{itemize}
+        \item Engine and Board;
+        \item Game difficulties;
+        \item Entities generation;
+        \item JavaFX \emph{View} controllers of start menu, login, difficulties selector, board, choose banions selector, and JavaFXView class;
+        \item Main controller class;
+    \end{itemize}
 
     \subsection*{Francesco Cipollone}
 
@@ -394,20 +434,99 @@
 
     \dots
 
-\subsection{Example}
+\section{Development notes}
+
+    Each one of us used these advanced aspects of language:
+
+    \subsection*{Enrico Marchionni}
+
+        \subsubsection{Bounded type parameters}
+
+        Used in a few occasions.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/util/EObserver.java#L15}.
+
+        \subsubsection{Generic class}
+        
+        Used frequently.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/config/CustomDeserializer.java#L47}.
+
+        \subsubsection{Annotation \emph{darwinsquest.annotation.Description}}
+
+        I used this custom annotations in 2 different scopes.
+
+        Example 1 at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/EngineImpl.java#L38}.
+
+        Example 2 at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/JavaFXView.java#L56}.
+
+        \subsubsection{Reflection}
+
+        Used in different situations.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/EngineImpl.java#L65}.
+
+        \subsubsection{Lambda expressions}
+
+        Used very frequently.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/gameobject/banion/BanionImpl.java#L57}.
+
+        \subsubsection{Optional}
+
+        Used very frequently.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/Engine.java#L31}.
+
+        \subsubsection{Stream}
+
+        Used very frequently.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/ChooseBanionMenuView.java#L69}.
+
+        \subsubsection{Immutable ordered set}
+
+        Used only at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/EngineImpl.java#L46}.
+
+        \subsubsection{library \href{https://openjfx.io/}{JavaFX}}
+        
+        Used for \emph{View} management.
+
+        Example at \textit{fxml} with \textit{.css}, example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/JavaFXView.java#L53}.
+        
+        \subsubsection{library \href{https://commons.apache.org/proper/commons-lang/}{apache commons-lang3}}
+        
+        Used frequently.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/graphics/BanionsSpriteFactory.java#L27}.
+        
+        \subsubsection{library \href{https://github.com/google/gson}{google Gson}}
+        
+        Used for deserialization.
+
+        Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/util/JsonUtils.java#L81}.
+        
+        \subsubsection{library \href{https://github.com/DiUS/java-faker}{javafaker}}
+        
+        Used only at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/difficulty/OpponentsFactoryImpl.java#L114}.
+
+    \subsection*{Francesco Cipollone}
+
+    \dots
+
+    \subsection*{Raffaele Marrazzo}
 
     \dots
 
 \chapter{Final comments}
 
-    \dots
+    Tile concept was never used in our battle \emph{Board} that consists in a series of battles that can be skipped by die jump.
+    It would be better to introduce different \emph{Tile}s and to be forced to complete \emph{BattleTile}s, while the others can be skipped.
 
 \section{Self-evaluation and future improvements}
 
-    \dots
-
     \subsection*{Enrico Marchionni}
-
+    
     \dots
 
     \subsection*{Francesco Cipollone}
@@ -419,12 +538,6 @@
     \dots
 
 \section{Difficulties and comments to teachers}
-
-    \dots
-
-    \subsection*{Enrico Marchionni}
-
-    \dots
 
     \subsection*{Francesco Cipollone}
 
