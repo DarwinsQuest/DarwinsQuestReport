@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 \usepackage{xurl}
 \usepackage{textcomp}
+\usepackage{float}
 
 \usepackage[
     backend=biber,
@@ -40,7 +41,7 @@
 
 \begin{abstract}
 
-    DarwinsQuest \cite{ontheoriginofspiecies} is a multi-level structured videogame set in a post apocalyptic world,
+    Darwin's Quest \cite{ontheoriginofspiecies} is a multi-level structured video game set in a post apocalyptic world,
     shaken by climate change. The goal is to survive natural selection by completing numerous battles,
     after choosing your genetically modified banions\footnote{\emph{Banion}, meaning Battle Companion, is the monsters' name.}.
 
@@ -57,52 +58,30 @@
 \begin{itemize}
     \item The game will open with a title screen, containing buttons to start/quit the game.
     \item The player can choose between two game modes: Normal, Hard.
-    \item At the beginning of the game, the player must be able to select a starter fight companion from a number of multiple choices.
+    \item At the beginning of the game, the player must be able to select four starter fight companions from a number of multiple choices.
     \item The game interface will consist of a board of levels in which the player moves. Each level will prompt a battle.
     \item The player's movement will be managed by tiles. Each tile is a battle tile.
         The movement will be determined by the use of a die. Said die value corresponds to the number of tiles that the player can move.
-    \item The companions are able to evolve based on an evolution tree. Starting from a node, the player can only select one of its children's nodes.
-        Once the player has unlocked one of the leaf nodes, the last tree node, the evolution in the said tree is completed.
+    \item The companions are able to evolve based on a linear evolution. Each time an evolution is triggered, the companions' statistics will increase.
     \item The player has to sequentially complete a series of levels, with increasing difficulty until meeting the final boss.
         The battles are engaged in 1v1 a turn-based combat fashion, with the ability to switch between companions or perform moves.
-        After winning a battle the player can choose an upgrade from the evolution tree.
 \end{itemize}
 
-\subsubsection{Non Functional}
+\subsubsection{Non-Functional}
 
 \begin{itemize}
     \item The battle needs to be challenging for the player and will require a careful strategic plan planning ahead. \label{challengingbattle}
     \item The game performances must be acceptable.
-    \item The game has to be portable and compatible with Windows, MacOS, and Linux systems.
+    \item The game has to be portable and compatible with Windows, macOS, and Linux systems.
 \end{itemize}
 
 \section{Domain Model}
 
-    The player can move inside the board map bounds. The map contains the player, the enemies, and special tiles such as the shop, bonus, and penalty tiles.
-    There are some different kind of tiles:
-\begin{itemize}
-    \item \textbf{Move tile}: a generic tile that does not contain any battle or special characteristics;
-    \item \textbf{Battle tile}: landing on this tile will prompt the beginning of a battle (battle tiles cannot be skipped, regardless of the drawn value).
-        Losing said battle will make the player stuck on this tile, preventing them from proceeding further in the game until they beat the opponent;
-    \item \textbf{Special tile}:
-    \begin{itemize}
-        \item \textbf{Bonus tiles}:
-        \begin{itemize}
-            \item Money gain;
-            \item Casual companion stats increase;
-        \end{itemize}
-    \end{itemize}
-    \begin{itemize}
-        \item \textbf{Penalty tiles}:
-        \begin{itemize}
-            \item Money loss;
-            \item Casual companion stats decrease;
-        \end{itemize}
-    \end{itemize}
-\end{itemize}
+    The player can move inside the board map bounds. The map contains the player, the enemies, and battle tiles.
+    Landing on this tile will prompt the beginning of a battle and losing the fight will trigger the game over;
 
-    The player can own one or more fight companions. Each companion has an intrinsic elemental type, such as fire, water, grass, rock, air, electro,
-    and is associated has a set of moves, which are divided into groups based on the companions' elemental type. A certain companion with a certain
+    The player owns four Banions. Each Banion has an intrinsic elemental type, such as fire, water, grass, rock, air, electro,
+    and is associated has a set of moves, which are divided into groups based on the companions' elemental type. A certain Banion with a certain
     type only retains moves of its same elemental type plus neutral moves, e.g. A fire companion can only use fire moves and neutral moves,
     and cannot perform other types' moves.
 
@@ -114,44 +93,161 @@
         \hline
         Banion & Element \\ [0.5ex] % Fire & Water & Grass & Rock & Air & Electro
         \hline\hline
-        fat bird & Air \\
+        Hefty & Air \\
         \hline
-        blue bird & Air \\
+        Aotori & Air \\
         \hline
-        bee & Air \\
+        Buzzwings & Air \\
         \hline
-        bat & Electro \\
+        Jolbat & Electro \\
         \hline
-        bunny & Electro \\
+        Sparkleap & Electro \\
         \hline
-        chameleon & Electro \\
+        Zapameleon & Electro \\
         \hline
-        angry pig & Fire \\
+        Infernhog & Fire \\
         \hline
-        chicken & Fire \\
+        Blazechick & Fire \\
         \hline
-        mushroom & Fire \\
+        Scorchspore & Fire \\
         \hline
-        trunk & Grass \\
+        Florastump & Grass \\
         \hline
-        radish & Grass \\
+        Herbroot & Grass \\
         \hline
-        plant & Grass \\
+        Flingleaf & Grass \\
         \hline
-        rocks & Rock \\
+        Stonemaul & Rock \\
         \hline
-        turtle & Rock \\
+        Spebble & Rock \\
         \hline
-        rino & Rock \\
+        Stonohorn & Rock \\
         \hline
-        slime & Water \\
+        Aquamuck & Water \\
         \hline
-        snail & Water \\
+        Hydrashell & Water \\
         \hline
-        duck & Water \\
+        Quacktide & Water \\
         \hline
     \end{tabular}
     \caption{\label{table:banions} Banions}
+    \end{center}
+\end{table}
+
+    The available moves for the Banions are:
+
+\begin{table}[H]
+    \begin{center}
+    \begin{tabular}{| c | c | c |}
+        \hline
+        Move & Element & Damage \\
+        \hline \hline
+        Tornado & Air & 3 \\
+        \hline
+        Aero Blast & Air & 3 \\
+        \hline
+        Breeze & Air & 3 \\
+        \hline
+        Monsoon & Air & 4 \\
+        \hline
+        Aero Slash & Air & 4 \\
+        \hline
+        Spark & Electro & 3 \\
+        \hline
+        Lightning & Electro & 3 \\
+        \hline
+        Thunderbolt & Electro & 3 \\
+        \hline
+        Volt Blitz & Electro & 4 \\
+        \hline
+        Surge Wave & Electro & 4 \\
+        \hline
+        Fireball & Fire & 3 \\
+        \hline
+        Flame & Fire & 3 \\
+        \hline
+        Torch & Fire & 3 \\
+        \hline
+        Magma Burst & Fire & 4 \\
+        \hline
+        Brazier & Fire & 4 \\
+        \hline
+        Meadow & Grass & 3 \\
+        \hline
+        Foliage Strike & Grass & 3 \\
+        \hline
+        Seed Barrage & Grass & 3 \\
+        \hline
+        Verdant Beam & Grass & 4 \\
+        \hline
+        Spores & Grass & 4 \\
+        \hline
+        Earthquake & Rock & 3 \\
+        \hline
+        Landslide & Rock & 3 \\
+        \hline
+        Bedrock Bash & Rock & 3 \\
+        \hline
+        Boulder Burst & Rock & 4 \\
+        \hline
+        Pebble Pummel & Rock & 4 \\
+        \hline
+        Tsunami & Water & 3 \\
+        \hline
+        Whirlpool & Water & 3 \\
+        \hline
+        Aqua Blast & Water & 3 \\
+        \hline
+        Coral Spear & Water & 4 \\
+        \hline
+        Waterfall & Water & 4 \\
+        \hline
+    \end{tabular}
+    \caption{\label{table:moves} Moves}
+    \end{center}
+\end{table}
+
+    \pagebreak
+    Some Banions will also have neutral-type moves:
+
+\begin{table}[H]
+    \begin{center}
+    \begin{tabular}{| c | c | c |}
+        \hline
+        Move & Element & Damage \\
+        \hline \hline
+        Claw & Neutral & 2 \\
+        \hline
+        Roar & Neutral & 2 \\
+        \hline
+        Bite & Neutral & 2 \\
+        \hline
+        Impale & Neutral & 2 \\
+        \hline
+        Kick & Neutral & 2 \\
+        \hline
+        Strike & Neutral & 2 \\
+        \hline
+        Blast & Neutral & 2 \\
+        \hline
+        Slash & Neutral & 2 \\
+        \hline
+        Swipe & Neutral & 2 \\
+        \hline
+        Pulse & Neutral & 2 \\
+        \hline
+        Beam & Neutral & 2 \\
+        \hline
+        Slam & Neutral & 2 \\
+        \hline
+        Hurl & Neutral & 2 \\
+        \hline
+        Punch & Neutral & 2 \\
+        \hline
+        Poke & Neutral & 2 \\
+        \hline
+    \end{tabular}
+    \caption{\label{table:neutralMoves} Neutral Moves}
     \end{center}
 \end{table}
 
@@ -186,30 +282,19 @@
     In every level, there are two player entities: the player and the opponent (NPC). These entities deploy their companions, which will fight 1v1.
     A level consists of a selection phase, a battle phase, and leveling phase:
 \begin{itemize}
-    \item \textbf{Selection phase}: before battling the player has to choose the first companion in his battle lineup from his current team;
-    \item \textbf{Battle phase}: during the player's fight turn, it is possible to switch their active companion to a different one (the team must have more than a single companion), 
+    \item \textbf{Battle phase}: during the player's fight turn, it is possible to switch their active companion to a different one, 
         or the player can perform a move. Upon the player's active companion's defeat, they will be forced to switch to another one. 
-        If the player is out of eligible companions the fight is over. In 2v2 battles, the player will deploy two of their companions. 
-        It will be possible to select which of the two enemy companions to attack while respecting each other turns.
-    \item \textbf{Leveling phase}: upon the player's victory, you will be prompted to choose an upgrade from the evolution tree, starting from any of the lastly unlocked nodes.
+        If the player is out of eligible companions the fight is over.
+    \item \textbf{Leveling phase}: upon the player's victory, Experience Points will be assigned to the Banions. If a Banion obtains enough XP it will evolve.
 \end{itemize}
 
-    The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves management.
-
-    The game currency can be obtained by winning battles and from bonus tiles (see ahead).
-    Losing a battle or landing on a Money loss tile will decrease the player's money amount.
-    Money can be used to purchase items, such as potions to temporarily increase your companion statistics, and companions from the in-game shop.
-
-    Modelling an evolution tree is considered a challenge because it requires designing a complex branching system that accurately reflects the evolution of the companions in the game. 
-    The tree must be visually appealing and easy to navigate, while also ensuring that each node is balanced and offers meaningful choices to the player. 
-    The designer must also consider how to balance the evolution of multiple trees simultaneously and ensure that the player does not become overwhelmed with too many choices. 
-    Additionally, the evolution tree must be designed to fit seamlessly into the game's mechanics and narrative.
+    The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves' management.
 
 \chapter{Design}
 
 \section{Architecture}
 
-    This projects is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
+    This project is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
     In out architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiate, in turn, the
     \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
     at the right moment, following MVC pattern.
@@ -396,7 +481,7 @@
 \section{Work strategy}
 
     We followed our \emph{Analysis} idea by developing the \emph{Model} main interfaces and classes.
-    During development we tried to adopt git-flow by creating a \emph{develop} branch and a new branch for each new \emph{feature}.
+    During development, we tried to adopt git-flow by creating a \emph{develop} branch and a new branch for each new \emph{feature}.
 
     ... problems with battle controller ...
 
@@ -480,7 +565,7 @@
 
         Example at \textit{fxml} with \textit{.css}, example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/JavaFXView.java#L53}.
         
-        \subsubsection{Library \href{https://commons.apache.org/proper/commons-lang/}{Apache Commons}}
+        \subsubsection{Library \href{https://commons.apache.org/proper/commons-lang/}{Apache Commons Lang 3}}
         
         Used frequently.
 
