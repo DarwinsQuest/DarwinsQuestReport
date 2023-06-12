@@ -300,12 +300,13 @@
     at the right moment, following MVC pattern.
 
     In our architecture the main classes are \textbf{JavaFXView} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
-    first one is responsible for the collection of input and shows the output, the third one is the logic of the game and the second one is the link between them.
+    first one is responsible for the collection of input and shows the output, the third one contains game main components and the second one is the link between them.
 
-    % \begin{figure}[h]
-    % \centering{}
-    % \includegraphics[width=\textwidth]{mvc}
-    % \end{figure}
+    \begin{figure}[ht]
+    \centering{}
+    \includegraphics[width=12cm]{mvc}
+    \caption{UML Model-View-Controller}
+    \end{figure}
 
 \section{Details}
 
@@ -333,8 +334,8 @@
 
             \begin{figure}[ht]
             \centering{}
-            \caption{UML difficulty}
             \includegraphics[width=\textwidth]{difficulty}
+            \caption{UML difficulty}
             % \label{img:difficulty}
             % \ref{img:difficulty}
             \end{figure}
@@ -373,7 +374,7 @@
             The two main problems I observed were the expansion of classes and the inability to easily and quickly add new ones.
             After that I took time to think at a more extendible and cleaner solution, at the end I decided to go for the deserialization.
             I decided to create in the MVC \emph{Controller} a system to deserialize entities from file.
-            In specific I chose \textit{.json}, using \href{https://github.com/google/gson}{Gson} library.
+            In specific I chose \textit{.json}, using \href{https://github.com/google/gson}{Google Gson} library.
             
             I also wanted to make sure to avoid duplication of information.
             We decided that every single entity must be identifiable by name.
