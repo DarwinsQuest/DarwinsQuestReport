@@ -55,21 +55,17 @@
 \subsubsection{Functional}
 
 \begin{itemize}
-    \item The game will open with a title screen, containing buttons to start/quit the game, \textit{and optionally a load button}.
-    \item \textit{The player can choose between three game modes: Normal, Hard, and Impossible.}
+    \item The game will open with a title screen, containing buttons to start/quit the game.
+    \item The player can choose between two game modes: Normal, Hard.
     \item At the beginning of the game, the player must be able to select a starter fight companion from a number of multiple choices.
-    \item The game interface will consist of a side-scrolling 2D view, containing the player and enemies. Encountering one enemy will prompt a battle.
-    \item \textit{The game has to manage an economic system that manages win and loss currency transactions.}
-    \item The player's movement will be managed by tiles. Each tile can be a move, battle, or special tile.
-        The movement will be determined by the use of a random value. Said value corresponds to the number of tiles that the player can move.
+    \item The game interface will consist of a board of levels in which the player moves. Each level will prompt a battle.
+    \item The player's movement will be managed by tiles. Each tile is a battle tile.
+        The movement will be determined by the use of a die. Said die value corresponds to the number of tiles that the player can move.
     \item The companions are able to evolve based on an evolution tree. Starting from a node, the player can only select one of its children's nodes.
         Once the player has unlocked one of the leaf nodes, the last tree node, the evolution in the said tree is completed.
-        \textit{Multiple trees can be present at once, meaning that multiple evolution branches could be developed at once.}
     \item The player has to sequentially complete a series of levels, with increasing difficulty until meeting the final boss.
         The battles are engaged in 1v1 a turn-based combat fashion, with the ability to switch between companions or perform moves.
-        Later in the game, 2v2 battles can be triggered. After winning a battle the player can choose an upgrade from the evolution tree.
-    \item The player can save their progress during the game. The player can save their progress only in the board.
-        It will not be possible to save during fights.
+        After winning a battle the player can choose an upgrade from the evolution tree.
 \end{itemize}
 
 \subsubsection{Non Functional}
@@ -218,7 +214,7 @@
     \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
     at the right moment, following MVC pattern.
 
-    In our architecture the main classes are \textbf{JavaFXVIew} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
+    In our architecture the main classes are \textbf{JavaFXView} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
     first one is responsible for the collection of input and shows the output, the third one is the logic of the game and the second one is the link between them.
 
     % \begin{figure}[h]
@@ -264,8 +260,6 @@
             Furthermore the \emph{Difficulty} decides also the \emph{OpponentFactory} implementation to pass to the \emph{Board} via \emph{Strategy}.
             The \emph{OpponentFactory} can be considered as \emph{Abstract Factory} because every single implementation of \emph{Difficulty} could pass
             a different implementation of \emph{OpponentFactory} to the relative \emph{BattleBoard}.
-            
-        \pagebreak
 
         \subsubsection{\emph{Banion}}
 
@@ -278,8 +272,6 @@
             After evaluating different options such as not overriding \emph{Banion}'s equals, we decided to use
             \href{https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html}{\textit{java.util.UUID}} class to identify every single \emph{Banion} instance.
             In this way it is possible for a player for example to have in the inventory two \emph{Banion}s with the same name twice, because they are different.
-
-        \pagebreak
 
         \subsubsection{\emph{Element}s, \emph{Move}s and \emph{Banion}s Generation}
 
@@ -321,8 +313,6 @@
             This would consist essentially on storing user \emph{Banion}s data in a folder (ex. \emph{.darwinsquest} in the user folder) and reload them after the login operation.
             For what concerns \emph{User} and \emph{Board} progresses serialization it should be thought in organization, and it would be integrated with the serialization/deserialization of entities.
 
-        \pagebreak
-
         \subsubsection{\emph{Sprite}s}
 
             \paragraph{Problem}
@@ -335,8 +325,6 @@
             So I decided to put the necessary data in the same \textit{.json} file that contained also the \emph{Banion}s information.
             By doing that I created a \emph{BanionsSpriteFactory} class in the \emph{View} that has to read \emph{Sprite} record (it contains \emph{Banion} .png information).
             Each banion will be associated in the \emph{View} to its \emph{Sprite} by its name (this can be seen in \emph{ChooseBanionMenuView} constructor).
-            
-        \pagebreak
 
         \subsubsection{View}
 
@@ -351,8 +339,6 @@
             I created a Controller for each Container.
             I created a \textit{View} interface that is a generic interface with the aim to create and show different views.
             In this way the \textit{View} interface remains generic and could potentially change without modifying its interfaces.
-
-        \pagebreak
 
     \subsection*{Francesco Cipollone}
 
@@ -488,25 +474,25 @@
 
         Used only at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/EngineImpl.java#L46}.
 
-        \subsubsection{library \href{https://openjfx.io/}{JavaFX}}
+        \subsubsection{Library \href{https://openjfx.io/}{JavaFX}}
         
         Used for \emph{View} management.
 
         Example at \textit{fxml} with \textit{.css}, example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/JavaFXView.java#L53}.
         
-        \subsubsection{library \href{https://commons.apache.org/proper/commons-lang/}{apache commons-lang3}}
+        \subsubsection{Library \href{https://commons.apache.org/proper/commons-lang/}{Apache Commons}}
         
         Used frequently.
 
         Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/view/graphics/BanionsSpriteFactory.java#L27}.
         
-        \subsubsection{library \href{https://github.com/google/gson}{google Gson}}
+        \subsubsection{Library \href{https://github.com/google/gson}{Google Gson}}
         
         Used for deserialization.
 
         Example at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/util/JsonUtils.java#L81}.
         
-        \subsubsection{library \href{https://github.com/DiUS/java-faker}{javafaker}}
+        \subsubsection{Library \href{https://github.com/DiUS/java-faker}{Java Faker}}
         
         Used only at \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/3ec97da07e9622ab8ec0333a774619be3332e88e/src/main/java/darwinsquest/core/difficulty/OpponentsFactoryImpl.java#L114}.
 
