@@ -7,6 +7,7 @@
 \usepackage{xurl}
 \usepackage{textcomp}
 \usepackage{float}
+\usepackage{adjustbox}
 
 \usepackage[
     backend=biber,
@@ -14,6 +15,12 @@
     sorting=ynt
 ]{biblatex}
 \addbibresource{darwinsquest.bib}
+
+\newcommand*{\MyIncludeGraphics}[2][]{%
+\begin{adjustbox}{max size={\textwidth}{\textheight}}
+    \includegraphics[#1]{#2}%
+\end{adjustbox}
+}
 
 \graphicspath{{img/}} % configuring the graphicx package globally
 
@@ -289,6 +296,12 @@
 \end{itemize}
 
     The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves' management.
+
+    \begin{figure}[H]
+    \centering{}
+    \caption{Model UML}
+    \MyIncludeGraphics{model}
+    \end{figure}
 
 \chapter{Design}
 
