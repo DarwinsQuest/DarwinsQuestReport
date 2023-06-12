@@ -7,7 +7,24 @@
 \usepackage{xurl}
 \usepackage{textcomp}
 \usepackage{float}
-
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{language=Java,
+    frame=lines,
+    showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    commentstyle=\color{gray},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily,
+    numbers=left,
+    moredelim=[il][\textcolor{grey}]{$$},
+    moredelim=[is][\textcolor{grey}]{\%\%}{\%\%}
+}
 \usepackage[
     backend=biber,
     style=alphabetic,
@@ -16,6 +33,9 @@
 \addbibresource{darwinsquest.bib}
 
 \graphicspath{{img/}} % configuring the graphicx package globally
+
+\theoremstyle{definition}
+\newtheorem{exmp}{Example}[section]
 
 \title{
     \begin{figure}[ht]
@@ -279,7 +299,7 @@
     \textit{Each companion in the game will have a personal set of statistics, such as attack (ATK), defense (DEF), health points (HP).
     The values make up the base statistics of a certain companion.}
 
-    In every level, there are two player entities: the player and the opponent (NPC). These entities deploy their companions, which will fight 1v1.
+    In every level, there are two player entities: the player and the opponent (NPC\footnote{\textbf{NPC: Non-Playable Character}}). These entities deploy their companions, which will fight 1v1.
     A level consists of a selection phase, a battle phase, and leveling phase:
 \begin{itemize}
     \item \textbf{Battle phase}: during the player's fight turn, it is possible to switch their active companion to a different one, 
@@ -425,9 +445,189 @@
             I created a \textit{View} interface that is a generic interface with the aim to create and show different views.
             In this way the \textit{View} interface remains generic and could potentially change without modifying its interfaces.
 
+    \pagebreak
+
     \subsection*{Francesco Cipollone}
 
-    \dots
+    \subsubsection{\underline{Game Entity - Player and Opponent}}
+    \paragraph{Problem}
+    A player and opponent need to be generalised into a broader concept, such as a game entity.
+    \paragraph{Solution}
+    The interface \verb|GameEntity| was created to represent both the player entity and the opponent entity.
+    It extends \verb|GameObject|, which represents the fundamental entities of the game.\\
+    To encapsulate all the common aspects of any game entity an abstract class called \verb|AbstractGameEntity| was created. Its main purpose is to handle the inventory, leaving all the
+    entity decisions (such as deploying a Banion, selecting a move, swapping a Banion, etc.) to the concrete entities.\\
+    The \verb|Player| and \verb|Opponent| can now handle those decisions with the input and the AI respectively.
+    In \verb|PlayerImpl| specifically, a static boolean method was added to check the validity of a username, by using a \textit{regular expression}.
+    A valid username is defined by these guidelines:
+
+    \begin{itemize}
+        \item A nickname must:
+        \begin{itemize}
+            \item Not be \verb|null| nor blank;
+            \item Start with an alphabetical character;
+            \item Not start with one or more digits;
+            \item Not start nor end with one or more symbols;
+            \item Not start nor end with one or more underscores;
+            \item Not include any white spaces;
+            \item Not include Unicode characters;
+        \end{itemize}
+        \item A nickname may include:
+        \begin{itemize}
+            \item One or more underscores between the first and last characters;
+            \item Digits after the first character;
+        \end{itemize}
+    \end{itemize}
+
+    \begin{exmp}
+        Nickname examples:
+        \begin{itemize}
+            \item[Valid:] \verb|Alice_hash7|, \verb|Bob|
+            \item[Invalid:] \verb|!Alice|, \verb|Amélie|
+        \end{itemize}
+    \end{exmp}
+
+    The game entities make use of an observer to notify when they decided to swap a Banion during a battle.
+
+    \begin{figure}[H]
+    \centering{}
+    \caption{GameEntity UML diagram.}
+    \includegraphics[width=\textwidth]{game_entity_uml}
+    \end{figure}
+
+    \subsubsection{\underline{Inventory}}
+    \paragraph{Problem}
+    Every game entity needs to possess an inventory to store their Banions.
+    \paragraph{Solution}
+    We firstly conceived the inventory to be an object that could hold both Banions and other items, however since the items were scrapped for the lack of time,
+    the concept of the inventory regressed to a simple list held in each game entity instance.\\
+    The inventory permits add and update operations. The latter removes a given Banion in favour of another one.\\
+    A crucial characteristic of the inventory is that it does not allow the insertion of a Banion that is already present. Specifically, it checks equality on the
+    Banion's UUID: Banions that are \textit{alike} are allowed, \textit{identical} ones are not.
+
+    \subsubsection{\underline{Evolution}}
+    \paragraph{Problem}
+    Each Banion must be able to evolve by gaining experience points and boosting its statistics.
+    \paragraph{Solution}
+    An \verb|Evolvable| interface is introduced: this interface contains the methods signatures that allows Banions to evolve.\\
+    To prompt an evolution, the Banion class has to use an \verb|Evolution|.
+    The \verb|Evolution| interface, which can also be implemented functionally, allows the given Banion to evolve, while basing said evolution
+    on a given condition.\\
+    While the use of a \verb|Predicate<Banion>| does not affect the Player's Banions, which are evolved by an experience points system\footnote{An evolution
+    is prompted when the maximum XP value is reached. The current XP will be reset to zero, or to any exceeding amount left from reaching said ceiling.},
+    it allows a diverse and customizable evolution for the Opponent's Banions by using the \textit{Strategy} architectural pattern.\\ % strategy pattern?
+    The \verb|Evolution| interface allows the creation of different kind of evolutions, such as tree evolutions, linear evolutions, etc.\\
+    This version uses a \verb|LinearEvolution|, meaning that the player cannot choose what and how to evolve their Banions: each statistics will be
+    jointly evolved.\\
+    The aforementioned approach additionally incorporates a maximum hp ceiling, which means that if the current hp statistic reaches the maximum allowable value,
+    further evolutions will not increase said statistic.
+
+    \begin{figure}[h]
+    \centering{}
+    \caption{Statistic UML diagram.}
+    \includegraphics[scale=0.8]{evolution_uml}
+    \end{figure}
+
+    \subsubsection{\underline{Statistic}}
+    \paragraph{Problem}
+    The Banion's statistics need to be easily manipulated and have to accommodate different numerical data types to allow reusability.
+    \paragraph{Solution}
+    To encapsulate the representation of a statistic with a numerical primitive type (such as \verb|int|, \verb|double| and \verb|float|)
+    a generic \verb|Statistic| interface was used.\\
+    This interface generic type \verb|T| extends the abstract class \verb|Number|: this allows the use of primitive types to back a statistic object.\\
+    A statistic is defined by a:
+
+    \begin{itemize}
+        \item Type: Attack, Defence, Hp.
+        \item Value: the actual primitive value.
+    \end{itemize}
+    
+    To unify these common characteristics an abstract class was used. The \verb|AbstractStatistic| constructor takes a \verb|String| to identify its type, and a
+    \verb|T| for its value.\\
+    Keeping a \verb|type| field is necessary to distinguish different statistics that may have the same numerical value, but differ in category.
+    It was also deemed acceptable to use a \verb|String| for storing each statistic type since an abstract class cannot be instantiated and has to be extended by
+    a concrete one, therefore keeping the \verb|String| creation inside the concrete constructor, and exposing only a \verb|T value| as its argument.
+
+    \begin{lstlisting}[caption={Example of a concrete stat constructor.}, gobble=8]
+        public ConcreteStat(final T value) {
+            super("type", value);
+        }
+    \end{lstlisting}
+
+    \begin{figure}[h]
+    \centering{}
+    \caption{Statistic UML diagram.}
+    \includegraphics[width=\textwidth]{statistic_uml}
+    \end{figure}
+
+    \subsubsection{\underline{Die}}
+    \paragraph{Problem}
+    The player movement in the game board is determined by the roll of a die.
+    \paragraph{Solution}
+    The \verb|Die| class extends a specialization of an \verb|IntSupplier|, called \verb|PositiveIntSupplier|.
+    This \verb|Die| represents a \href{https://en.wikipedia.org/wiki/Dice#Polyhedral_dice}{Polyhedral die}, meaning a
+    three-dimensional die with polygonal faces, straight edges and sharp vertices.\\
+    Polyhedral dice include the \textit{classic} cubical die, as well as non-cubical ones, such as tetrahedra, octahedra, dodecahedra
+    and so on and so forth.\\
+    There are many other rare variations of polyhedral dice, with various number of faces, but for the sake of simplicity
+    a \verb|Die| instance was considered legal when its number of faces is even, and it is greater or equal to the minimum faces number.\\
+    If this condition is not met, an \verb|IllegalArgumentException| will be thrown at construction.\\
+    The \verb|Die| class internally uses a \verb|RandomGenerator| to generate pseudo-random sequences of integer values that represent
+    the number drawn by the player.
+    
+    \begin{figure}[h]
+    \centering{}
+    \caption{Die UML diagram.}
+    \includegraphics[scale=0.8]{die_uml}
+    \end{figure}
+
+    \subsubsection{\underline{SpriteAnimation}}
+    \paragraph{Problem}
+    Each Banion has an associated sprite sheet that has to be properly shown to the end user as an animated sprite.
+    \paragraph{Solution}
+    The class \verb|SpriteAnimation| was created to animate sprite sheets \cite{spriteSheets}. \verb|SpriteAnimation| \cite{spriteAnimation} extends JavaFX's Transition
+    abstract class and was adapted for our intended use and needs.
+
+    \begin{figure}[h]
+    \centering{}
+    \caption{The idle sprite sheet for \textbf{Infernhog}.}
+    \includegraphics[width=\textwidth]{spritesheet}
+    \end{figure}
+
+    This class \textit{slices} the sprite sheet into single sprites (given the dimensions of a single sprite) and sets the provided \verb|ImageView|'s viewport to said sprite.
+    The aforementioned process is repeated for each individual sprite, creating the illusion of a single moving image for the player.\\
+    A newer addition to the original \verb|SpriteAnimation| is the possibility to mirror the sprite horizontally. This enables the usage of
+    the same sprite sheet for both the player and opponent's Banions, since they face each other in the battle GUI.\\
+    Another new feature is the usage of an upscale multiplier for the sprite sheet image. To prevent the sprite to look too small
+    and grainy a new \verb|Image| object with the requested dimensions (multiplied by the upscale factor), and the \verb|smooth| argument
+    set to \verb|false| is created.
+    This approach allows the sprites to be displayed crisply on screen.
+
+    \subsubsection{\underline{GameSoundSystem}}
+    \paragraph{Problem}
+    The game needs a simple way to play background music and sounds effects.
+    \paragraph{Solution}
+    \verb|GameSoundSystem| is a helper class to play BGM\footnote{\textbf{BGM}: acronym for background music.} and SFX\footnote{\textbf{SFX}: acronym for sound effect.}.\\
+    This audio playback helper class was conceived with these key components in mind:
+
+    \begin{itemize}
+        \item[Modularity]: and \textbf{Encapsulation}: promotes modular design, code organization, easy maintenance and updating;
+        \item[Reusability]: allows reusage across multiple classes without duplicating code;
+        \item[Abstraction]: grants complex operations' encapsulation, reducing application complexity and ensuring efficient usage;
+        \item[Extensibility]: enables the addition of new features, effects, and libraries without affecting other application components;
+    \end{itemize}
+
+    JavaFX's \textit{Media} module was used as the audio playback library. Different \verb|MediaPlayer|s were used to play BGM and SFX.
+    This distinction allows the playback of both BGM and SFX simultaneously.\\
+    Sounds will be loaded from their location into a \verb|Map| that links a \verb|String| containing the file name to a \verb|Pair| that contains the
+    \verb|Media| object itself and an \verb|Optional<Duration>| that allows to trim the audio clip, if desired.\\
+    The next paragraph will discuss the problems that were encountered while loading the audio resources from a JAR file.
+
+    \subparagraph{Loading audio resources from JAR.}
+    Loading audio resources at runtime from the jar file revealed itself to be a delicate matter: after an extensive research it was ascertained that loading
+    sounds at runtime while running the application from an IDE/build tool and from the jar file required two different approaches. The latter required the use
+    of the \verb|JarFile| class specified in the package \verb|java.util.jar|.\\
+    To address this issue a solution \cite{jarFile} was found and incorporated after being properly adapted and refactored to follow our needs.
 
     \subsection*{Raffaele Marrazzo}
 
@@ -583,7 +783,14 @@
 
     \subsection*{Francesco Cipollone}
 
-    \dots
+    % TODO: Add permalinks.
+    \begin{itemize}
+        \item Use of generics in the \verb|Statistic| interface and its subclasses.
+        \item Use of \verb|Stream| and lambda expressions in various sections.
+        \item Creation of a \verb|GameSoundSystem| with the JavaFX media module.
+        \item Use of \verb|MultiValuedMap| from Apache Commons Collections 4.
+    \end{itemize}
+    \cite{spriteAnimation}    % TODO: add rest
 
     \subsection*{Raffaele Marrazzo}
 
