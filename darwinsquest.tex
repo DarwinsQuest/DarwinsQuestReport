@@ -8,6 +8,7 @@
 \usepackage{textcomp}
 \usepackage{float}
 \usepackage{amsthm}
+\usepackage{amssymb}
 \usepackage{xcolor}
 \usepackage{listings}
 \lstset{language=Java,
@@ -449,7 +450,7 @@
 
     \subsection*{Francesco Cipollone}
 
-    \subsubsection{\underline{Game Entity - Player and Opponent}}
+    \subsubsection{\underline{Game Entity - Player \& Opponent}}
     \paragraph{Problem}
     A player and opponent need to be generalised into a broader concept, such as a game entity.
     \paragraph{Solution}
@@ -482,8 +483,8 @@
     \begin{exmp}
         Nickname examples:
         \begin{itemize}
-            \item[Valid:] \verb|Alice_hash7|, \verb|Bob|
-            \item[Invalid:] \verb|!Alice|, \verb|Amélie|
+            \item[\checkmark] \textbf{Valid}: \verb|Alice_hash7|, \verb|Bob|
+            \item[$\times$] \textbf{Invalid}: \verb|!Alice|, \verb|Amélie|
         \end{itemize}
     \end{exmp}
 
@@ -515,7 +516,7 @@
     on a given condition.\\
     While the use of a \verb|Predicate<Banion>| does not affect the Player's Banions, which are evolved by an experience points system\footnote{An evolution
     is prompted when the maximum XP value is reached. The current XP will be reset to zero, or to any exceeding amount left from reaching said ceiling.},
-    it allows a diverse and customizable evolution for the Opponent's Banions by using the \textit{Strategy} architectural pattern.\\ % strategy pattern?
+    it allows a diverse and customizable evolution for the Opponent's Banions by permitting different evolution approaches.\\
     The \verb|Evolution| interface allows the creation of different kind of evolutions, such as tree evolutions, linear evolutions, etc.\\
     This version uses a \verb|LinearEvolution|, meaning that the player cannot choose what and how to evolve their Banions: each statistics will be
     jointly evolved.\\
@@ -538,8 +539,8 @@
     A statistic is defined by a:
 
     \begin{itemize}
-        \item Type: Attack, Defence, Hp.
-        \item Value: the actual primitive value.
+        \item \textbf{Type}: Attack, Defence, Hp.
+        \item \textbf{Value}: the actual primitive value.
     \end{itemize}
     
     To unify these common characteristics an abstract class was used. The \verb|AbstractStatistic| constructor takes a \verb|String| to identify its type, and a
@@ -611,10 +612,10 @@
     This audio playback helper class was conceived with these key components in mind:
 
     \begin{itemize}
-        \item[Modularity]: and \textbf{Encapsulation}: promotes modular design, code organization, easy maintenance and updating;
-        \item[Reusability]: allows reusage across multiple classes without duplicating code;
-        \item[Abstraction]: grants complex operations' encapsulation, reducing application complexity and ensuring efficient usage;
-        \item[Extensibility]: enables the addition of new features, effects, and libraries without affecting other application components;
+        \item \textbf{Modularity} and \textbf{Encapsulation}: promotes modular design, code organization, easy maintenance and updating;
+        \item \textbf{Reusability}: allows reusage across multiple classes without duplicating code;
+        \item \textbf{Abstraction}: grants complex operations' encapsulation, reducing application complexity and ensuring efficient usage;
+        \item \textbf{Extensibility}: enables the addition of new features, effects, and libraries without affecting other application components;
     \end{itemize}
 
     JavaFX's \textit{Media} module was used as the audio playback library. Different \verb|MediaPlayer|s were used to play BGM and SFX.
@@ -700,7 +701,18 @@
 
     \subsection*{Francesco Cipollone}
 
-    \dots
+    \begin{itemize}
+        \item GameEntity - Player \& Opponent;
+        \item Inventory
+        \item Evolution
+        \item Statistic
+        \item Die
+        \item SpriteAnimation
+        \item GameSoundSystem
+    \end{itemize}
+
+    %talk about multimap
+    \label{multimap}
 
     \subsection*{Raffaele Marrazzo}
 
@@ -784,14 +796,30 @@
 
     \subsection*{Francesco Cipollone}
 
-    % TODO: Add permalinks.
-    \begin{itemize}
-        \item Use of generics in the \verb|Statistic| interface and its subclasses.
-        \item Use of \verb|Stream| and lambda expressions in various sections.
-        \item Creation of a \verb|GameSoundSystem| with the JavaFX media module.
-        \item Use of \verb|MultiValuedMap| from Apache Commons Collections 4.
-    \end{itemize}
-    \cite{spriteAnimation}    % TODO: add rest
+    \subsubsection{Use of \texttt{Optional}}
+    Used in different occasions.\\
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/gameobject/entity/AbstractGameEntity.java#L69-L75}
+
+    \subsubsection{Generics}
+    Used in the \verb|Statistic| interface and its subclasses.\\
+    Example in \verb|AbstractStatistic|: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/statistic/AbstractStatistic.java#L9}
+
+    \subsubsection{\texttt{Stream} and lambda expressions}
+    Used in various sections.\\
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/gameobject/entity/AbstractGameEntity.java#L61}
+
+    % Move to collab section.
+    %\subsubsection{Use of JavaFX and FXML to create a GUI.}
+    %Used in \verb|BattleView| and \verb|battle.fxml|.\\
+    %Example at: \url{}
+
+    \subsubsection{Creation of a \texttt{GameSoundSystem} with the JavaFX media module}
+    Used in \verb|GameSoundSystem|.\\
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/view/sound/GameSoundSystem.java#L30}
+
+    \subsubsection{Use of \texttt{MultiValuedMap} from Apache Commons Collections 4}
+    Used in \verb|Evolvable| interface, Look at \ref{multimap} for implementation notes.\\
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/evolution/Evolvable.java#LL11C29-L11C29}
 
     \subsection*{Raffaele Marrazzo}
 
