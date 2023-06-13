@@ -445,7 +445,95 @@
 
     \subsection*{Raffaele Marrazzo}
 
-    \dots
+        \subsubsection{Battle realization}
+            
+        \begin{figure}[H]
+            \centering{}
+            \caption{UML representation of the turns' architecture}
+            \includegraphics[width=\textwidth]{turns}
+        \end{figure}
+
+        \begin{figure}[H]
+            \centering{}
+            \caption{Decision system}
+            \includegraphics[width=\textwidth]{decisions}
+        \end{figure}
+
+            \paragraph{Problem} 
+
+            Developing the battle to perform "step by step", rather than in "one shot", and make it extendible.
+
+            \paragraph{Solution}
+
+            At the beginning I conceived the battle as an entity that had to be performed in "one shot", but I had a lot of problems 
+            testing it because it was difficult to tell what happened during the battle's development. So I adopted a different
+            approach, described below.
+
+            I conceived the battle as a sequence of turns. Each turn allows to perform one action only. The battle has only
+            references to the interface \verb|Turn|, in order to make it extendible: if in the future someone wants to introduce
+            a new kind of action that can be performed in a turn, the battle won't need to be changed.
+            The turn logic also helps to test the battle, because in this way it is possible to test what happens in each turn,
+            and not only at the end of the battle.
+
+            The decision system also helps the battle to be extendible: at a certain point in the battle, the \verb|GameEntity| on turn is asked
+            to make their decision. At this moment, thanks to the method \verb|getAssociatedTurn()| of the interface \verb|Decision|,
+            the turn associated with that specific choice is created, and so the battle does not have to worry about the instantiation of a
+            specific \verb|Turn|, or about the presence of a new decision.
+
+            \paragraph{Problem}
+
+            During the development of the turns, I noticed that all the \verb|Turn| implementations had a lot of things in
+            common, leading to code duplication.
+
+            \paragraph{Solution}
+
+            I developed the abstract class \verb|AbstractTurn|, which factorizes all the things that the Turn implementations have in common.
+            In particular, in the above-mentioned class, I used the pattern \emph{Template method}, in order to avoid code duplication.
+            The template method is \verb|performTurn()|, inherited by the interface Turn, which calls the protected and abstract 
+            method \verb|doAction()|, which is implemented in different ways in all the Turn's subclasses, which extend \verb|AbstractTurn|.
+
+            \paragraph{Problem}
+
+            Managing with the same strategy the two \verb|GameEntity|'s turns.
+
+            \paragraph{Solution}
+
+            At the beginning, the two entities that fight in the battle were managed with the same strategy. But, when the user input had
+            been introduced, we had problems with the management of the \verb|Player|'s turn, because the battle forced them to swap their
+            currently deployed Banion if it was dead. On the other hand, for the \verb|Opponent|, it was necessary to force the swap 
+            in case of death, because its AI is managed randomly. So, even if it is not the best solution, I decided to manage the turns 
+            of the two instances of \verb|GameEntity| in the battle with different strategies, by not forcing the player to swap its currently 
+            deployed Banion directly from the battle.
+
+            \paragraph{Problem}
+
+            Each \verb|Turn| needs to be different and identifiable from each other turn.
+
+            \paragraph{Solution}
+
+            After different evaluations, for instance identifying a turn by using the \verb|GameEntity| on turn and the \verb|GameEntity|
+            not on turn (this solution was considered not adequate because in this way a battle could have had some equal turns),
+            I decided to identify each \verb|Turn| through a unique identifier
+            (\href{https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html}{\textit{java.util.UUID}}).
+
+        \subsubsection{Moves}
+
+            \begin{figure}[H]
+                \centering{}
+                \caption{Moves' architecture}
+                \includegraphics[width=\textwidth]{moves}
+            \end{figure}
+        
+            \paragraph{Problem}
+
+            Manage the existence of different kind of moves.
+
+            \paragraph{Solution}
+
+            I decided to create the interface \verb|Move|, which represents all the possible kinds of battle moves. In this way, a \verb|Banion|
+            can have references only to \verb|Move| and so being capable of managing different types of moves (e.g. moves that can
+            change the stats of a Banion, that, at the beginning, we wanted to develop but, for the sake of time we decided to put aside this idea).
+
 
 \chapter{Deployment}
 
@@ -620,7 +708,8 @@
 
     \subsection*{Raffaele Marrazzo}
 
-    \dots
+
+
 
 \section{Difficulties and comments to teachers}
 
@@ -630,7 +719,7 @@
 
     \subsection*{Raffaele Marrazzo}
 
-    \dots
+    
 
 \appendix
 
