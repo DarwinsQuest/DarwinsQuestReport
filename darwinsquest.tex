@@ -329,9 +329,9 @@
 \section{Architecture}
 
     This project is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
-    In our architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiate, in turn, the
-    \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
-    at the right moment, following MVC pattern.
+    In our architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiates the \textbf{Controller} itself.
+    The latter represents the main class, and it coordinates the interaction between the \textbf{View} and the \textbf{Model}, which is instantiated at a proper time by
+    the \textbf{Controller}, following the MVC architectural pattern.
 
     In our architecture the main classes are \textbf{JavaFXView} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
     first one is responsible for the collection of input and shows the output, the third one contains game main components and the second one is the link between them.
@@ -546,12 +546,12 @@
             \item Not start nor end with one or more symbols;
             \item Not start nor end with one or more underscores;
             \item Not include any white spaces;
-            \item Not include Unicode characters;
+            \item Not include Unicode characters.
         \end{itemize}
         \item A nickname may include:
         \begin{itemize}
             \item One or more underscores between the first and last characters;
-            \item Digits after the first character;
+            \item Digits after the first character.
         \end{itemize}
     \end{itemize}
 
@@ -614,7 +614,7 @@
     A statistic is defined by a:
 
     \begin{itemize}
-        \item \textbf{Type}: Attack, Defence, Hp.
+        \item \textbf{Type}: Attack, Defence, Hp;
         \item \textbf{Value}: the actual primitive value.
     \end{itemize}
     
@@ -690,7 +690,7 @@
         \item \textbf{Modularity} and \textbf{Encapsulation}: promotes modular design, code organization, easy maintenance and updating;
         \item \textbf{Reusability}: allows reusage across multiple classes without duplicating code;
         \item \textbf{Abstraction}: grants complex operations' encapsulation, reducing application complexity and ensuring efficient usage;
-        \item \textbf{Extensibility}: enables the addition of new features, effects, and libraries without affecting other application components;
+        \item \textbf{Extensibility}: enables the addition of new features, effects, and libraries without affecting other application components.
     \end{itemize}
 
     JavaFX's \textit{Media} module was used as the audio playback library. Different \verb|MediaPlayer|s were used to play BGM and SFX.
@@ -716,53 +716,29 @@
 
     We used \emph{JUnit} to test our \emph{Model} classes.
 
-    \subsection*{Enrico Marchionni}
+    Application components that underwent unit testing:
 
-    \subsubsection{TestNormalDifficulty}
-    
-    Tests difficulty and opponents factory behavior;
+    \begin{itemize}
+        \item Battle, Decision and Turn;
+        \item AI;
+        \item Difficulty;
+        \item Evolution;
+        \item Banion;
+        \item Player \& Opponent;
+        \item Moves;
+        \item Die;
+        \item Board;
+        \item Engine;
+        \item Banion deserialization.
+    \end{itemize}
 
-    \subsubsection{TestBanion}
-    
-    Tests if \emph{Banion} behaves correctly, and if \emph{Element}s are correctly related to \emph{Banion}s;
-
-    \subsubsection{TestEngine}
-    
-    Tests \emph{Engine} behavior as difficulty provider.
-
-    \subsubsection{TestAssert}
-    
-    Despite using additional libraries such as \href{https://commons.apache.org/proper/commons-lang/}{apache commons-lang3}
-    I implemented the utility \emph{darwinsquest.util.Asserts} class to accelerate arguments checks in a fluently way.
-
-    \subsubsection{TestCollectors}
-    
-    Tests the \emph{darwinsquest.util.Collectors} utility class necessary to collect data to an immutable view of \emph{java.util.LinkedHashSet} for example.
-
-    \subsubsection{TestGeneration}
-    
-    Tests the correct generation of entities, how described in my \emph{Details} section.
-
-    \subsubsection{View}
-
-    For questions of time and lack of knowledge I wasn't able to test the \emph{View}.
-
-    \subsection*{Francesco Cipollone}
-
-    \dots
-
-    \subsection*{Raffaele Marrazzo}
-
-    \dots
+    The aforementioned components were regarded as key application's features, hence the decision of unit testing them.
 
 \section{Work strategy}
 
-    We followed our \emph{Analysis} idea by developing the \emph{Model} main interfaces and classes.
-    During development, we tried to adopt git-flow by creating a \emph{develop} branch and a new branch for each new \emph{feature}.
+    During development, we adopted the git-flow approach by creating a \verb|develop| branch and a new branch for each new \verb|feature|.
 
-    ... problems with battle controller ...
-
-    We proceeded as follows:
+    We agreed upon the Model API interfaces, and we subsequently proceeded as follows:
 
     \subsection*{Enrico Marchionni}
 
@@ -771,31 +747,50 @@
         \item Game difficulties;
         \item Entities generation;
         \item JavaFX \emph{View} controllers of start menu, login, difficulties selector, board, choose banions selector, and JavaFXView class;
-        \item Main controller class;
+        \item Main controller class.
     \end{itemize}
 
     \subsection*{Francesco Cipollone}
 
     \begin{itemize}
         \item GameEntity - Player \& Opponent;
-        \item Inventory
-        \item Evolution
-        \item Statistic
-        \item Die
-        \item SpriteAnimation
-        \item GameSoundSystem
+        \item EntityController;
+        \item Inventory;
+        \item Evolution;
+        \item Statistic;
+        \item Die;
+        \item SpriteAnimation;
+        \item GameSoundSystem.
     \end{itemize}
-
-    %talk about multimap
-    \label{multimap}
 
     \subsection*{Raffaele Marrazzo}
 
     \dots
 
+    \subsubsection*{Game components developed in conjunction}
+
+    \begin{itemize}
+        \item \verb|BattleView| and relative \verb|fxml|;
+        \begin{itemize}
+            \item Enrico Marchionni: sprites rendering;
+            \item Francesco Cipollone: initialising a random background and music. Added SFX. Created the FXML;
+            \item Raffaele Marrazzo: interaction with \verb|BattleController|, switch to Victory screen and Game Over screen.
+        \end{itemize}
+        \item \verb|ChooseBanionMenuView|;
+        \begin{itemize}
+            \item Enrico Marchionni: Event handlers, constructor;
+            \item Raffaele Marrazzo: FXML.
+        \end{itemize}
+        \item \verb|BanionImpl|;
+        \begin{itemize}
+            \item Enrico Marchionni: the Banion implementation;
+            \item Francesco Cipollone: included the evolution\label{multimap}.
+        \end{itemize}
+    \end{itemize}
+
 \section{Development notes}
 
-    Each one of us used these advanced aspects of language:
+    Each one of us used these advanced aspects of the Java language:
 
     \subsection*{Enrico Marchionni}
 
@@ -893,7 +888,7 @@
     Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/view/sound/GameSoundSystem.java#L30}
 
     \subsubsection{Use of \texttt{MultiValuedMap} from Apache Commons Collections 4}
-    Used in \verb|Evolvable| interface, Look at \ref{multimap} for implementation notes.\\
+    Used in \verb|Evolvable| interface, Look at \ref{multimap} for implementation details.\\
     Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/evolution/Evolvable.java#LL11C29-L11C29}
 
     \subsection*{Raffaele Marrazzo}
@@ -902,18 +897,42 @@
 
 \chapter{Final comments}
 
+    \paragraph{Tiles}
     Tile concept was never used in our battle \emph{Board} that consists in a series of battles that can be skipped by die jump.
     It would be better to introduce different \emph{Tile}s and to be forced to complete \emph{BattleTile}s, while the others can be skipped.
 
-\section{Self-evaluation and future improvements}
-
-    \subsection*{Enrico Marchionni}
-    
+    \paragraph{AI}
     \dots
+
+    \paragraph{Memory leak and profiling}
+    During the late state of the project, a memory leak was discovered. This bug created serious performance issues, that caused the game to completely freeze
+    during the battles.\\
+    We, Francesco Cipollone and Raffaele Marrazzo, tried to perform a hot fix by using \textit{VisualVM} for profiling.
+    The root of the problem was a faulty observers' management: each \verb|Observable| has a \verb|Collection| of observers that is always getting populated by
+    new observers, but never freed of them, even when they are not needed anymore. This caused the \verb|Collection| to grow uncontrollably, leading to massive
+    CPU and memory usage.\\
+    For time concerns and the complexity (that was not debated during the course's lectures) of the problem, we were not able to fix it.\\
+    To achieve acceptable performances during the game execution we decided to not alter the original architecture, but to decrease the possibility
+    of a serious memory leak to happen by cutting the overall Banion's health points, making the battle shorter.
+
+    \begin{figure}[H]
+    \centering{}
+    \caption{CPU and Memory usage snapshot}
+    \includegraphics[width=\textwidth]{profiling1}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering{}
+    \caption{Memory sample snapshot}
+    \includegraphics[width=\textwidth]{profiling2}
+    \end{figure}
+
+\section{Self-evaluation and future improvements}
 
     \subsection*{Francesco Cipollone}
 
-    \dots
+    I am quite pleased on how this project turned out even if we did not manage to reach the level of complexity in game mechanics that we agreed upon.\\
+    This was my first \textit{real} experience working with a small team of developers, and it strengthened my belief in how much important collaboration is.
 
     \subsection*{Raffaele Marrazzo}
 
@@ -953,8 +972,8 @@ Click the ``Fight'' button to begin a battle. Once a battle is won, press the ``
 \section{Battle Mechanics}
 During battles, the player will have several options available:
 \begin{itemize}
-  \item \textbf{Move Buttons}: These four buttons represent the available moves for the Banions in the player's inventory. Click on the desired move to execute it during the battle.
-  \item \textbf{Swap Button}: This button allows the player to swap the active Banion with another one from their inventory. To swap the current Banion with the next one that is alive, click the Swap button.
+  \item \textbf{Move Buttons}: These four buttons represent the available moves for the Banions in the player's inventory. Click on the desired move to execute it during the battle;
+  \item \textbf{Swap Button}: This button allows the player to swap the active Banion with another one from their inventory. To swap the current Banion with the next one that is alive, click the Swap button;
   \item \textbf{End Button}: This button prematurely ends the battle, resulting in a loss.
 \end{itemize}
 
