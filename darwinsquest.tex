@@ -64,7 +64,7 @@
 
     Darwin's Quest \cite{ontheoriginofspiecies} is a multi-level structured video game set in a post apocalyptic world,
     shaken by climate change. The goal is to survive natural selection by completing numerous battles,
-    after choosing your genetically modified banions\footnote{\emph{Banion}, meaning Battle Companion, is the monsters' name.}.
+    after choosing your genetically modified Banions\footnote{\emph{Banion}, meaning Battle Companion, is the monsters' name.}.
 
 \end{abstract}
 
@@ -77,13 +77,12 @@
 \subsubsection{Functional}
 
 \begin{itemize}
-    \item The game will open with a title screen, containing buttons to start/quit the game.
-    \item The player can choose between two game modes: Normal, Hard.
-    \item At the beginning of the game, the player must be able to select four starter fight companions from a number of multiple choices.
-    \item The game interface will consist of a board of levels in which the player moves. Each level will prompt a battle.
+    \item The player can choose between two game modes: Normal, Hard;
+    \item At the beginning of the game, the player must be able to select four starter fight companions from a number of multiple choices;
+    \item The game interface will consist of a board of levels in which the player moves. Each level will prompt a battle;
     \item The player's movement will be managed by tiles. Each tile is a battle tile.
-        The movement will be determined by the use of a die. Said die value corresponds to the number of tiles that the player can move.
-    \item The companions are able to evolve based on a linear evolution. Each time an evolution is triggered, the companions' statistics will increase.
+        The movement will be determined by the use of a die. Said die value corresponds to the number of tiles that the player can move;
+    \item The companions are able to evolve based on a linear evolution. Each time an evolution is triggered, the companions' statistics will increase;
     \item The player has to sequentially complete a series of levels, with increasing difficulty until meeting the final boss.
         The battles are engaged in 1v1 a turn-based combat fashion, with the ability to switch between companions or perform moves.
 \end{itemize}
@@ -91,19 +90,19 @@
 \subsubsection{Non-Functional}
 
 \begin{itemize}
-    \item The battle needs to be challenging for the player and will require a careful strategic plan planning ahead. \label{challengingbattle}
-    \item The game performances must be acceptable.
+    \item The battle needs to be challenging for the player and will require a careful strategic plan planning ahead; \label{challengingbattle}
+    \item The game performances must be acceptable;
     \item The game has to be portable and compatible with Windows, macOS, and Linux systems.
 \end{itemize}
 
 \section{Domain Model}
 
     The player can move inside the board map bounds. The map contains the player, the enemies, and battle tiles.
-    Landing on this tile will prompt the beginning of a battle and losing the fight will trigger the game over;
+    Landing on this tile will prompt the beginning of a battle and losing the fight will trigger the game over.
 
     The player owns four Banions. Each Banion has an intrinsic elemental type, such as fire, water, grass, rock, air, electro,
-    and is associated has a set of moves, which are divided into groups based on the companions' elemental type. A certain Banion with a certain
-    type only retains moves of its same elemental type plus neutral moves, e.g. A fire companion can only use fire moves and neutral moves,
+    and is associated has a set of moves, which are divided into groups based on the Banions' elemental type. A certain Banion with a certain
+    type only retains moves of its same elemental type plus neutral moves, e.g. A fire Banion can only use fire moves and neutral moves,
     and cannot perform other types' moves.
 
     Banions in our game are the following:
@@ -301,12 +300,12 @@
     The values make up the base statistics of a certain companion.}
 
     In every level, there are two player entities: the player and the opponent (NPC\footnote{\textbf{NPC: Non-Playable Character}}). These entities deploy their companions, which will fight 1v1.
-    A level consists of a selection phase, a battle phase, and leveling phase:
+    A level consists of a battle phase, and leveling phase:
 \begin{itemize}
     \item \textbf{Battle phase}: during the player's fight turn, it is possible to switch their active companion to a different one, 
         or the player can perform a move. Upon the player's active companion's defeat, they will be forced to switch to another one. 
         If the player is out of eligible companions the fight is over.
-    \item \textbf{Leveling phase}: upon the player's victory, Experience Points will be assigned to the Banions. If a Banion obtains enough XP it will evolve.
+    \item \textbf{Leveling phase}: upon the player's victory, Experience Points will be assigned to the Banions. If a Banion obtains enough XP\footnote{\textbf{XP}: Experience Points} it will evolve.
 \end{itemize}
 
     The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves' management.
@@ -316,7 +315,7 @@
 \section{Architecture}
 
     This project is developed in \href{https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller}{MVC} (Model, View and Controller) architecture.
-    In out architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiate, in turn, the
+    In our architecture the \textbf{Controller} is the entry point of the application. It instantiates the \textbf{View} that instantiate, in turn, the
     \textbf{Controller} main class for interaction between \textbf{View} and \textbf{Controller}. The \textbf{Model} is instantiated by the \textbf{Controller}
     at the right moment, following MVC pattern.
 
