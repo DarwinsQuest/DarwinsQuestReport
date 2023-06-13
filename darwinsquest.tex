@@ -26,12 +26,20 @@
     moredelim=[il][\textcolor{grey}]{$$},
     moredelim=[is][\textcolor{grey}]{\%\%}{\%\%}
 }
+\usepackage{adjustbox}
+
 \usepackage[
     backend=biber,
     style=alphabetic,
     sorting=ynt
 ]{biblatex}
 \addbibresource{darwinsquest.bib}
+
+\newcommand*{\MyIncludeGraphics}[2][]{%
+\begin{adjustbox}{max size={\textwidth}{\textheight}}
+    \includegraphics[#1]{#2}%
+\end{adjustbox}
+}
 
 \graphicspath{{img/}} % configuring the graphicx package globally
 
@@ -310,6 +318,12 @@
 
     The fight mechanics are considered a project challenge for their complexity \ref{challengingbattle}, from the elemental reaction logic to the moves' management.
 
+    \begin{figure}[H]
+    \centering{}
+    \caption{Model UML}
+    \MyIncludeGraphics{model}
+    \end{figure}
+
 \chapter{Design}
 
 \section{Architecture}
@@ -320,12 +334,13 @@
     at the right moment, following MVC pattern.
 
     In our architecture the main classes are \textbf{JavaFXView} (View), \textbf{ControllerImpl} (Controller) and \textbf{EngineImpl} (Model). The
-    first one is responsible for the collection of input and shows the output, the third one is the logic of the game and the second one is the link between them.
+    first one is responsible for the collection of input and shows the output, the third one contains game main components and the second one is the link between them.
 
-    % \begin{figure}[h]
-    % \centering{}
-    % \includegraphics[width=\textwidth]{mvc}
-    % \end{figure}
+    \begin{figure}[ht]
+    \centering{}
+    \includegraphics[width=12cm]{MVC_main_classes}
+    \caption{UML Model-View-Controller}
+    \end{figure}
 
 \section{Details}
 
@@ -353,8 +368,8 @@
 
             \begin{figure}[ht]
             \centering{}
-            \caption{UML difficulty}
             \includegraphics[width=\textwidth]{difficulty}
+            \caption{UML difficulty}
             % \label{img:difficulty}
             % \ref{img:difficulty}
             \end{figure}
@@ -365,8 +380,10 @@
             Furthermore the \emph{Difficulty} decides also the \emph{OpponentFactory} implementation to pass to the \emph{Board} via \emph{Strategy}.
             The \emph{OpponentFactory} can be considered as \emph{Abstract Factory} because every single implementation of \emph{Difficulty} could pass
             a different implementation of \emph{OpponentFactory} to the relative \emph{BattleBoard}.
+            
+        \pagebreak
 
-        \subsubsection{\emph{Banion}}
+        \subsubsection{\emph{Banion identification}}
 
             \paragraph{Problem}
 
@@ -377,6 +394,34 @@
             After evaluating different options such as not overriding \emph{Banion}'s equals, we decided to use
             \href{https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html}{\textit{java.util.UUID}} class to identify every single \emph{Banion} instance.
             In this way it is possible for a player for example to have in the inventory two \emph{Banion}s with the same name twice, because they are different.
+            
+        \pagebreak
+
+        \subsubsection{\emph{Banion modified}}
+
+            \paragraph{Problem}
+
+            In the \emph{View} each \emph{Banion} represented could be modified and should be seen always in most updated state.
+            Furthermore potentially there could be more that one \emph{View} representing the same \emph{Banion}.
+
+            \paragraph{Solution}
+
+            I decided to make the Banion observable for its changed state.
+
+            \begin{figure}[ht]
+            \centering{}
+            \includegraphics[width=\textwidth]{banion_changed}
+            \caption{UML Banion Observer}
+            \end{figure}
+
+            \paragraph{Pattern}
+
+            The \emph{Observer} pattern was adopted to notify changes of state from the specific \emph{Banion}.
+            \emph{BanionImpl} is the subject (the observable object) while \emph{BanionControllerImpl} and then \emph{BattleView} are the Observers.
+            In specific \emph{BanionImpl} is observed from \emph{BanionControllerImpl} while \emph{BanionControllerImpl} is observed from \emph{BattleView}.
+            \emph{BanionControllerImpl} is a "read only" \emph{Banion} wrapper that decouples \emph{Model} from \emph{View}.
+            
+        \pagebreak
 
         \subsubsection{\emph{Element}s, \emph{Move}s and \emph{Banion}s Generation}
 
@@ -393,7 +438,7 @@
             The two main problems I observed were the expansion of classes and the inability to easily and quickly add new ones.
             After that I took time to think at a more extendible and cleaner solution, at the end I decided to go for the deserialization.
             I decided to create in the MVC \emph{Controller} a system to deserialize entities from file.
-            In specific I chose \textit{.json}, using \href{https://github.com/google/gson}{Gson} library.
+            In specific I chose \textit{.json}, using \href{https://github.com/google/gson}{Google Gson} library.
             
             I also wanted to make sure to avoid duplication of information.
             We decided that every single entity must be identifiable by name.
@@ -418,6 +463,33 @@
             This would consist essentially on storing user \emph{Banion}s data in a folder (ex. \emph{.darwinsquest} in the user folder) and reload them after the login operation.
             For what concerns \emph{User} and \emph{Board} progresses serialization it should be thought in organization, and it would be integrated with the serialization/deserialization of entities.
 
+        \pagebreak
+
+        \subsubsection{\emph{Board Opponents}}
+
+            \paragraph{Problem}
+
+            How to represent \emph{BattleTile}s in the \emph{Board}, and when to create \emph{Opponents} for each level.
+
+            \paragraph{Solution}
+
+            The \emph{BattleBoard} is a specific board that contains the concepts of battle and levels.
+            Each movement in the \emph{Board} brings the player over a new \emph{BattleTile}.
+            The \emph{BattleBoard} was specifically created by the selected \emph{Difficulty} with a particular \emph{OpponentsFactory} implementation.
+            Once the player is to start a battle its specific opponent is created at that moment.
+
+            \begin{figure}[ht]
+            \centering{}
+            \includegraphics[width=\textwidth]{opponents_creation}
+            \caption{UML Board Opponents}
+            \end{figure}
+
+            \paragraph{Pattern}
+
+            The \emph{OpponentsFactory} is passed via\emph{Strategy} at the specific \emph{BattleBoard}.
+            
+        \pagebreak
+
         \subsubsection{\emph{Sprite}s}
 
             \paragraph{Problem}
@@ -430,12 +502,14 @@
             So I decided to put the necessary data in the same \textit{.json} file that contained also the \emph{Banion}s information.
             By doing that I created a \emph{BanionsSpriteFactory} class in the \emph{View} that has to read \emph{Sprite} record (it contains \emph{Banion} .png information).
             Each banion will be associated in the \emph{View} to its \emph{Sprite} by its name (this can be seen in \emph{ChooseBanionMenuView} constructor).
+            
+        \pagebreak
 
         \subsubsection{View}
 
             \paragraph{Problem}
 
-            How to separate concerns in the chosen \emph{JavaFX} library.
+            How to separate concerns in the chosen \emph{JavaFX} library in MVC.
             How to decouple style from showing controls, for example how to specify each \emph{Scene} font in a \emph{DRY} (don't repeat yourself) way.
 
             \paragraph{Solution}
@@ -444,6 +518,8 @@
             I created a Controller for each Container.
             I created a \textit{View} interface that is a generic interface with the aim to create and show different views.
             In this way the \textit{View} interface remains generic and could potentially change without modifying its interfaces.
+            
+        \pagebreak
 
     \pagebreak
 
