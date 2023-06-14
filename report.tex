@@ -71,7 +71,7 @@
 \begin{abstract}
 
     Darwin's Quest \cite{ontheoriginofspiecies} is a multi-level structured video game set in a post apocalyptic world,
-    shaken by climate change. The goal is to survive natural selection by completing numerous battles,
+    shaken by climate change. The goal is to survive the natural selection by completing numerous battles,
     after choosing your genetically modified Banions\footnote{\emph{Banion}, meaning Battle Companion, is the monsters' name.}.
 
 \end{abstract}
@@ -92,27 +92,25 @@
         The movement will be determined by the use of a die. Said die value corresponds to the number of tiles that the player can move;
     \item The companions are able to evolve based on a linear evolution. Each time an evolution is triggered, the companions' statistics will increase;
     \item The player has to sequentially complete a series of levels, with increasing difficulty until meeting the final boss.
-        The battles are engaged in 1v1 a turn-based combat fashion, with the ability to switch between companions or perform moves.
+        The battles are engaged in a 1v1 turn-based combat fashion, with the ability to switch between companions or perform moves.
 \end{itemize}
 
 \subsubsection{Non-Functional}
 
 \begin{itemize}
-    \item The battle needs to be challenging for the player and will require a careful strategic plan planning ahead; \label{challengingbattle}
+    \item The battle needs to be challenging for the player and will require a careful strategic plan; \label{challengingbattle}
     \item The game performances must be acceptable;
     \item The game has to be portable and compatible with Windows, macOS, and Linux systems.
 \end{itemize}
 
 \section{Domain Model}
 
-    The player can move inside the board map bounds. The map contains the player, the enemies, and battle tiles.
-    Landing on this tile will prompt the beginning of a battle and losing the fight will trigger the game over.
-
+    The player can move inside the board map. The map contains the player, the enemies, and battle tiles.
+    Landing on the latter will prompt the beginning of a battle and losing the fight will trigger the game over.
     The player owns four Banions. Each Banion has an intrinsic elemental type, such as fire, water, grass, rock, air, electro,
-    and is associated has a set of moves, which are divided into groups based on the Banions' elemental type. A certain Banion with a certain
+    and is associated to a set of moves, which are divided into groups based on the Banions' elemental type. A certain Banion with a certain
     type only retains moves of its same elemental type plus neutral moves, e.g. A fire Banion can only use fire moves and neutral moves,
     and cannot perform other types' moves.
-
     Banions in our game are the following:
 
 \begin{table}[ht]
@@ -162,6 +160,7 @@
     \end{center}
 \end{table}
 
+    \pagebreak
     The available moves for the Banions are:
 
 \begin{table}[H]
@@ -518,8 +517,6 @@
             I created a Controller for each Container.
             I created a \textit{View} interface that is a generic interface with the aim to create and show different views.
             In this way the \textit{View} interface remains generic and could potentially change without modifying its interfaces.
-            
-        \pagebreak
 
     \pagebreak
 
@@ -598,7 +595,7 @@
     The aforementioned approach additionally incorporates a maximum hp ceiling, which means that if the current hp statistic reaches the maximum allowable value,
     further evolutions will not increase said statistic.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
     \centering{}
     \caption{Statistic UML diagram.}
     \includegraphics[scale=0.8]{evolution_uml}
@@ -630,7 +627,7 @@
         }
     \end{lstlisting}
 
-    \begin{figure}[h]
+    \begin{figure}[H]
     \centering{}
     \caption{Statistic UML diagram.}
     \includegraphics[width=\textwidth]{statistic_uml}
@@ -647,11 +644,8 @@
     and so on and so forth.\\
     There are many other rare variations of polyhedral dice, with various number of faces, but for the sake of simplicity
     a \verb|Die| instance was considered legal when its number of faces is even, and it is greater or equal to the minimum faces number.\\
-    If this condition is not met, an \verb|IllegalArgumentException| will be thrown at construction.\\
-    The \verb|Die| class internally uses a \verb|RandomGenerator| to generate pseudo-random sequences of integer values that represent
-    the number drawn by the player.
     
-    \begin{figure}[h]
+    \begin{figure}[H]
     \centering{}
     \caption{Die UML diagram.}
     \includegraphics[scale=0.5]{die_uml}
@@ -661,10 +655,10 @@
     \paragraph{Problem}
     Each Banion has an associated sprite sheet that has to be properly shown to the end user as an animated sprite.
     \paragraph{Solution}
-    The class \verb|SpriteAnimation| was created to animate sprite sheets \cite{spriteSheets}. \verb|SpriteAnimation| \cite{spriteAnimation} extends JavaFX's Transition
+    The class \verb|SpriteAnimation| was created to animate sprite sheets \cite{spriteSheets}. \verb|SpriteAnimation| \cite{spriteAnimation} extends JavaFX's \verb|Transition|
     abstract class and was adapted for our intended use and needs.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
     \centering{}
     \caption{The idle sprite sheet for \textbf{Infernhog}.}
     \includegraphics[width=\textwidth]{spritesheet}
@@ -703,7 +697,7 @@
     Loading audio resources at runtime from the jar file revealed itself to be a delicate matter: after an extensive research it was ascertained that loading
     sounds at runtime while running the application from an IDE/build tool and from the jar file required two different approaches. The latter required the use
     of the \verb|JarFile| class specified in the package \verb|java.util.jar|.\\
-    To address this issue a solution \cite{jarFile} was found and incorporated after being properly adapted and refactored to follow our needs.\\
+    To address this issue a solution \cite{jarFile} was found and incorporated after being properly adapted and refactored to follow our needs.\\\\
     Soundtracks by SketchyLogic \cite{bgm} were used for BGM, audio clips by OmegaPixelArt \cite{sfxGB} and ColorAlpha \cite{sfxMenu} were used for SFX.
 
     \subsection*{Raffaele Marrazzo}
@@ -765,7 +759,7 @@
             been introduced, we had problems with the management of the \verb|Player|'s turn, because the battle forced them to swap their
             currently deployed Banion if it was dead. On the other hand, for the \verb|Opponent|, it was necessary to force the swap 
             in case of death, because its AI is managed randomly. So, even if it is not the best solution, I decided to manage the turns 
-            of the two instances of \verb|GameEntity| in the battle with different strategies, by not forcing the player to swap its currently 
+            of the two subclasses of \verb|GameEntity| in the battle with different strategies, by not forcing the player to swap its currently 
             deployed Banion directly from the battle.
 
             \paragraph{Problem}
@@ -961,6 +955,10 @@
 
     \subsection*{Francesco Cipollone}
 
+    \subsubsection{Use of \texttt{regex}}
+    Used in \verb|PlayerImpl|.\\
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/cb0341532cf8fc87d07e9c13e2ae7ea104b54500/src/main/java/darwinsquest/core/gameobject/entity/PlayerImpl.java#L103}
+
     \subsubsection{Use of \texttt{Optional}}
     Used in different occasions.\\
     Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/gameobject/entity/AbstractGameEntity.java#L69-L75}
@@ -979,7 +977,7 @@
 
     \subsubsection{Use of \texttt{MultiValuedMap} from Apache Commons Collections 4}
     Used in \verb|Evolvable| interface, Look at \ref{multimap} for implementation details.\\
-    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/evolution/Evolvable.java#LL11C29-L11C29}
+    Example at: \url{https://github.com/DarwinsQuest/DarwinsQuest/blob/64f84140f503f2e40d97e1dc69d0824c86c322e6/src/main/java/darwinsquest/core/evolution/Evolvable.java#L58}
 
     \subsection*{Raffaele Marrazzo}
 
